@@ -19,6 +19,7 @@ from django.urls import path
 from predict import  views
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    path(r'data/',views.data),
     path(r'show/',views.show),
     path(r'eval/',views.eval),
     path(r'pre/',views.pre),

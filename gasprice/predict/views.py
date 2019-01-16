@@ -15,9 +15,48 @@ from sklearn.model_selection import train_test_split
 import xgboost as xgb
 import pandas as pd
 import numpy as np
+from etherscan.proxies import Proxies
+# 全局变量
+with open('D:\\api_key.json', mode='r') as key_file:
+    key = json.loads(key_file.read())['key']
+api = Proxies(api_key=key)
 # 导入该模块
 # Create your views here.
 # request参数必须有，名字是类似self的默认规则，可以改，它封装了用户请求的所有内容
+def get_recent_block():
+    block = api.get_most_recent_block()
+    return int(block, 16)
+def creat_block_list(blockheight,num):
+    block_list=[]
+    for i in range(num):
+        block_list.append(blockheight-i)
+    return block_list
+
+def get_tran_Data(block_list):
+    info=[]
+    for blockheight in block_list:
+        tran=[]
+        block = api.get_block_by_number(blockheight)
+        # print(type(block))
+        # print("Transaction num is {}".format(len(block['transactions'])))
+        tran.append(len(block['transactions']))
+        gasprice=[]
+        for row in block['transactions']:
+            gasprice.append(round(int(row['gasPrice'],16)/1000000000,2))
+        # print("The min gasprice is {} in block {}".format(min(gasprice),blockheight))
+        tran.append(min(gasprice))
+        tran.append(blockheight)
+        # print(int(block['transactions'][1]['gasPrice'],16))
+        info.append(tran)
+    return info
+def data(request):
+    num2=7
+    if request.method == "POST":
+        num2 = int(request.POST.get("num2",None))
+    blockheight=get_recent_block()
+    block_list=creat_block_list(blockheight,num2)
+    info=get_tran_Data(block_list)
+    return render(request, 'data.html', {"List": info})
 def show(request):
     if request.session.get('is_login') == '1':
         uname = request.session['username']
