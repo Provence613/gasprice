@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/css/font-awesome/css/font-awesome.min.css" type="text/css">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">-->
+    <link rel="stylesheet" href="../static/css/theme.css" type="text/css">
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container"> <a class="navbar-brand text-primary" href="#">
+        <i class="fa d-inline fa-lg fa-circle-o"></i>
+        <b> Gas Pricing</b>
+    </a> <button class="navbar-toggler navbar-toggler-right border-0" type="button" data-toggle="collapse" data-target="#navbar5">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+        <div class="collapse navbar-collapse" id="navbar5">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"> <a class="nav-link" href="/register">Register</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="/login">Login</a> </li>
+                <!--<li class="nav-item"> <a class="nav-link" href="#">Logout</a> </li>-->
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"> <a class="nav-link" href="/pre">Prediction</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="/show">History Analysis</a> </li>
+                <li class="nav-item"> <a class="nav-link" href="/eval">History Evaluation</a> </li>
+            </ul>
+{#            <a class="btn btn-outline-primary navbar-btn ml-md-2" href="user.php">user history</a>#}
+        </div>
+    </div>
+</nav>
+<div class="py-5 text-center">
+    <div class="container">
+        <div class="row">
+            {% if errors %}
+        <li>
+
+            {% for error in errors %}
+             <p style="color: red;">
+                {{error}}
+             </p>
+              {% endfor %}
+        </li>
+    {% endif %}
+        </div>
+        <div class="row">
+            <div class="mx-auto col-lg-6 col-10">
+                <h1>O my friend</h1>
+                <p class="mb-3"> Welcome to our website, we will provide you with gasPrice forecast and historical transaction data query.</p>
+                <form class="text-left" action="/login/" method="post">
+                    <div class="form-group"> <label for="username">Your Name</label> <input type="text" class="form-control" id="username" name="username" placeholder="Johann W. Goethe" required> </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6"> <label for="pass">Password</label> <input type="password" class="form-control" name="pass" id="pass" placeholder="•••" required> </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
