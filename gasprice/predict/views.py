@@ -33,30 +33,75 @@ def creat_block_list(blockheight,num):
     return block_list
 
 def get_tran_Data(block_list):
-    info=[]
+    # height_list=[] #blockheight
+    num_list=[] #transaction num
+    lowprice_list=[] #low price
+    aveprice_list=[] #average price
+    id_list=[]
+    i=1
     for blockheight in block_list:
-        tran=[]
         block = api.get_block_by_number(blockheight)
         # print(type(block))
         # print("Transaction num is {}".format(len(block['transactions'])))
-        tran.append(len(block['transactions']))
-        gasprice=[]
-        for row in block['transactions']:
-            gasprice.append(round(int(row['gasPrice'],16)/1000000000,2))
-        # print("The min gasprice is {} in block {}".format(min(gasprice),blockheight))
-        tran.append(min(gasprice))
-        tran.append(blockheight)
+        num_list.append(len(block['transactions']))
+        id_list.append(i)
+        if len(block['transactions'])==0:
+            lowprice_list.append(0)
+            aveprice_list.append(0)
+        else:
+            gasprice=[]
+            for row in block['transactions']:
+                gasprice.append(round(int(row['gasPrice'],16)/1000000000,2))
+            # print("The min gasprice is {} in block {}".format(min(gasprice),blockheight))
+            lowprice_list.append(min(gasprice))
+            aveprice_list.append(round(np.mean(gasprice),2))
+        i=i+1
+        # height_list.append(blockheight)
         # print(int(block['transactions'][1]['gasPrice'],16))
-        info.append(tran)
+    return id_list,num_list,lowprice_list,aveprice_list
+def get_tran_info(TX_HASH):
+    transaction = api.get_transaction_by_hash(tx_hash=TX_HASH)
+    info=[]
+    info.append(transaction['hash'])
+    info.append(int(transaction['blockNumber'],16))
+    info.append(transaction['from'])
+    info.append(transaction['to'])
+    info.append(int(transaction['gas'],16))
+    info.append(int(transaction['gasPrice'],16)/1000000000)
+    info.append(int(transaction['value'],16))
     return info
+def detailtx(request):
+    tx_hash=request.GET.get("hash",None)
+    list=get_tran_info(tx_hash)
+    return render(request, 'detailtx.html',{"tran":list})
+def get_block_info(blocknumber):
+    block = api.get_block_by_number(blocknumber)
+    info=[]
+    info.append(block['hash'])
+    info.append(int(block['number'],16))
+    info.append(int(block['difficulty'],16))
+    info.append(int(block['timestamp'],16))
+    info.append(len(block['transactions']))
+    tx_hash = []
+    for row in block['transactions']:
+        tx_hash.append(row['hash'])
+    info.append(tx_hash)
+    info.append(int(block['nonce'],16))
+    info.append(int(block['gasLimit'],16))
+    info.append(int(block['gasUsed'],16))
+    return info
+def detailblock(request):
+    blocknumber=int(request.GET.get("num",None))
+    list=get_block_info(blocknumber)
+    return render(request, 'detailblock.html',{"block":list})
 def data(request):
-    num2=7
+    num2=50
     if request.method == "POST":
         num2 = int(request.POST.get("num2",None))
     blockheight=get_recent_block()
     block_list=creat_block_list(blockheight,num2)
-    info=get_tran_Data(block_list)
-    return render(request, 'data.html', {"List": info})
+    id_list,num_list, lowprice_list, aveprice_list=get_tran_Data(block_list)
+    return render(request, 'data.html', {"label":id_list,"height":block_list,"num":num_list,"lowprice":lowprice_list,"aveprice":aveprice_list})
 def show(request):
     if request.session.get('is_login') == '1':
         uname = request.session['username']
