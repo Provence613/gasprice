@@ -15,9 +15,10 @@ from sklearn.model_selection import train_test_split
 import xgboost as xgb
 import pandas as pd
 import numpy as np
+import os
 from etherscan.proxies import Proxies
 # 全局变量
-with open('D:\\api_key.json', mode='r') as key_file:
+with open('./api_key.json', mode='r') as key_file:
     key = json.loads(key_file.read())['key']
 api = Proxies(api_key=key)
 # 导入该模块
@@ -73,7 +74,8 @@ def get_tran_info(TX_HASH):
 def detailtx(request):
     tx_hash=request.GET.get("hash",None)
     list=get_tran_info(tx_hash)
-    return render(request, 'detailtx.html',{"tran":list})
+    path=os.path.abspath('.')
+    return render(request, 'detailtx.html',{"tran":list,"path":path})
 def get_block_info(blocknumber):
     block = api.get_block_by_number(blocknumber)
     info=[]
@@ -184,7 +186,7 @@ def eval(request):
     return render(request,'eval.html',{"data": data1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"uname":uname})
 def process_data():
     cols = ['difficulty', 'gaslimit', 'gasused', 'gaspricel1', 'gaspricel2']
-    data_df = pd.read_csv("D:\\transaction.csv")
+    data_df = pd.read_csv("./transaction.csv")
     # cols=['difficulty','gaspricel1','gaspricel2']
     X=data_df[cols]
     y=data_df['gasprice']
