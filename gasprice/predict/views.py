@@ -316,3 +316,15 @@ def register(request):
 def logout(request):
     request.session.flush()
     return HttpResponseRedirect('/pre')
+def home(request):
+    return render(request,"home.html")
+def about(request):
+    return render(request,"about.html")
+def forecast(request):
+    return render(request,"forecast.html")
+def backtest(request):
+    return render(request,"backtest.html")
+def contact(request):
+    return render(request,"contact.html")
+def blockexplorer(request):
+    return render(request,"block-explorer.html")

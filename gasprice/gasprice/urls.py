@@ -28,5 +28,10 @@ urlpatterns = [
     path(r'login/',views.login),
     path(r'register/',views.register),
     path(r'logout/',views.logout),
-
+    path(r'home/', views.home),
+    path(r'about/', views.about),
+    path(r'forecast/', views.forecast),
+    path(r'backtest/', views.backtest),
+    path(r'contact/', views.contact),
+    path(r'blockexplorer/', views.blockexplorer),
 ]
