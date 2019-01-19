@@ -317,7 +317,16 @@ def logout(request):
     request.session.flush()
     return HttpResponseRedirect('/pre')
 def home(request):
-    return render(request,"home.html")
+    num2 = 10
+    if request.method == "POST":
+        num2 = int(request.POST.get("num2", None))
+    blockheight = get_recent_block()
+    block_list = creat_block_list(blockheight, num2)
+    id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+    return render(request, 'home.html',
+                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
+                   "aveprice": aveprice_list})
+    #return render(request,"home.html")
 def about(request):
     return render(request,"about.html")
 def forecast(request):
