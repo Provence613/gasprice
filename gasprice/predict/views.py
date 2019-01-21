@@ -376,7 +376,16 @@ def home(request):
                    "aveprice": aveprice_list})
     #return render(request,"home.html")
 
-
+def homedata(request):
+    num2 = 10
+    if request.method == "POST":
+        num2 = int(request.POST.get("num2", None))
+    blockheight = get_recent_block()
+    block_list = creat_block_list(blockheight, num2)
+    id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+    return render(request, 'homedata.html',
+                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
+                   "aveprice": aveprice_list})
 def about(request):
     return render(request,"about.html")
 def forecast(request):
@@ -403,4 +412,23 @@ def blockexplorer(request):
             list = get_tran_info(info)
             path = os.path.abspath('.')
             return render(request, 'block-explorer.html', {"type": infotype, "info": list, "path": path})
+
+def blockexplorerdata(request):
+    num2 = 20
+    infotype = request.GET.get("type", None)
+    info = request.GET.get("info", None)
+    if infotype == None:
+        blockheight = get_recent_block()
+        block_list = creat_block_list(blockheight, num2)
+        id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+        print("ok")
+        return render(request, 'blockexplorerdata.html', {"height": block_list, "num": num_list, "lowprice": lowprice_list,"aveprice": aveprice_list})
+    else:
+        if infotype=='block':
+            list = get_block_info(info)
+            return render(request, 'blockexplorerdata.html', {"type": infotype, "info": list})
+        else:
+            list = get_tran_info(info)
+            path = os.path.abspath('.')
+            return render(request, 'blockexplorerdata.html', {"type": infotype, "info": list, "path": path})
 
