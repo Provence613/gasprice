@@ -71,10 +71,6 @@ def get_tran_info(TX_HASH):
     info.append(int(transaction['gasPrice'],16)/1000000000)
     info.append(int(transaction['value'],16))
     return info
-def detailtx(request):
-    tx_hash=request.GET.get("hash",None)
-    list=get_tran_info(tx_hash)
-    return render(request, 'detailtx.html',{"tran":list})
 def get_block_info(blocknumber):
     block = api.get_block_by_number(blocknumber)
     info=[]
@@ -91,10 +87,6 @@ def get_block_info(blocknumber):
     info.append(int(block['gasLimit'],16))
     info.append(int(block['gasUsed'],16))
     return info
-def detailblock(request):
-    blocknumber=int(request.GET.get("num",None))
-    list=get_block_info(blocknumber)
-    return render(request, 'detailblock.html',{"block":list})
 def get_pre_Data(block_list):
     # height_list=[] #blockheight
     maxprice_list=[]
@@ -121,56 +113,6 @@ def get_pre_Data(block_list):
         # height_list.append(blockheight)
         # print(int(block['transactions'][1]['gasPrice'],16))
     return lowprice_list,aveprice_list,maxprice_list,timestamp_list
-def show(request):
-    if request.session.get('is_login') == '1':
-        uname = request.session['username']
-    else:
-        uname = ''
-    tran_list = []
-    id_list = []
-    price_list=[]
-    count_list=[]
-    time_list=[]
-    count1_list=[]
-    cursor = connection.cursor()
-    num1=20
-    cursor.execute("select INTERVAL(gasprice,1,5,15,30) as i_p,COUNT(height) from transinfo group by i_p")
-    # cursor.execute("SELECT gasprice,COUNT('height') from transinfo GROUP BY gasprice limit %s" % (num1))
-    # 使用一个变量来接收查询到的数据，
-    # fetchall（）返回查询到的所有数据
-    results = cursor.fetchall()
-    price_list=['<1','1<5','5<15','15<30','>30']
-    for row in results:
-        # gasprice = row[0]
-        trancount = row[1]
-        # price_list.append(gasprice)
-        count_list.append(trancount)
-    cursor.execute("select count(*),timestamp from transinfo GROUP BY timestamp")
-    results1 = cursor.fetchall()
-    for row in results1:
-        timestamp = row[1]
-        trancount = row[0]
-        time_list.append(timestamp)
-        count1_list.append(trancount)
-    if request.method == "POST":
-        num=int(request.POST.get("num",None))
-        # for i in Transinfo.objects.filter(id__lt=num):
-        #     id_list.append(i.id)
-        #     tran_list.append(i.gasprice)
-    else:
-        num=15
-    cursor.execute("select gasprice from transinfo order by height DESC LIMIT  %s" % (num))
-    results2 = cursor.fetchall()
-    j=1
-    for row in results2:
-        price= row[0]
-        tran_list.append(price)
-        id_list.append(j)
-        j=j+1
-        # for i in Transinfo.objects.filter(id__lt=7):
-        #     id_list.append(i.id)
-        #     tran_list.append(i.gasprice)
-    return render(request, 'show.html',{"List":json.dumps(tran_list),"label":json.dumps(id_list),"List1":json.dumps(count_list),"label1":json.dumps(price_list),"List2":json.dumps(count1_list),"label2":json.dumps(time_list),'uname':uname})
 def eval(request):
     if request.session.get('is_login') == '1':
         uname = request.session['username']
@@ -243,7 +185,7 @@ def pre(request):
     block_list = creat_block_list(blockheight, 2)
     lowprice_list, aveprice_list, maxprice_list,timestamp_list = get_pre_Data(block_list)
     gaspricel1=lowprice_list[0]
-    gaspricel2=lowprice_list[1]
+    # gaspricel2=lowprice_list[1]
     std=aveprice_list[0]
     maxprice=maxprice_list[0]
     timespan1=timestamp_list[0]-timestamp_list[1]
@@ -251,21 +193,6 @@ def pre(request):
     difficulty=int(block['difficulty'],16)
     gaslimit=int(block['gasLimit'],16)
     gasused=int(block['gasUsed'],16)
-    # cursor = connection.cursor()
-    # cursor.execute("SELECT * FROM transinfo ORDER BY height DESC LIMIT 1")
-    # # 使用一个变量来接收查询到的数据，
-    # # fetchall（）返回查询到的所有数据
-    # results = cursor.fetchall()
-    # for row in results:
-    #     gasprice=row[1]
-    #     height= row[2]
-    #     gaslimit = row[4]
-    #     gasused = row[5]
-    #     std=row[7]
-    #     difficulty=row[3]
-    #     gaspricel1=row[8]
-    #     gaspricel2=row[9]
-    #     maxprice=row[10]
     rate=round((gasused/gaslimit)*100,2)
     price=gaspricel1
     if request.method == "POST":
@@ -281,81 +208,6 @@ def pre(request):
             maxprice=price
         contime=time
     return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1})
-def login(request):
-    errors = []
-    account = None
-    password = None
-    if request.method == "POST":
-        if not request.POST.get('username'):
-            errors.append('username is not null')
-        else:
-            account = request.POST.get('username')
-
-        if not request.POST.get('pass'):
-            errors = request.POST.get('password is not null')
-        else:
-            password = request.POST.get('pass')
-
-        if account is not None and password is not None:
-            user = User.objects.filter(username=account, password=password)
-            if user:
-                request.session['is_login'] = '1'  # 这个session是用于后面访问每个页面（即调用每个视图函数时要用到，即判断是否已经登录，用此判断）
-                request.session['user_id'] = user[0].id
-                request.session['username']=user[0].username
-                return HttpResponseRedirect('/pre')
-            else:
-                errors.append('username or password is not exist')
-    return  render(request,"login.html",{"errors":errors})
-def register(request):
-    errors = []
-    account = None
-    password = None
-    password2 = None
-    email = None
-    company=None
-    CompareFlag = False
-
-    if request.method == 'POST':
-        if not request.POST.get('username'):
-            errors.append('username is not null')
-        else:
-            account = request.POST.get('username')
-
-        if not request.POST.get('pass'):
-            errors.append('password is not null')
-        else:
-            password = request.POST.get('pass')
-        if not request.POST.get('repass'):
-            errors.append('confirm password is noy null')
-        else:
-            password2 = request.POST.get('repass')
-        if not request.POST.get('email'):
-            errors.append('email is not null')
-        else:
-            email = request.POST.get('email')
-        if not request.POST.get('company'):
-            errors.append('company is not null')
-        else:
-            company = request.POST.get('company')
-        if User.objects.filter(username=account).exists():
-            errors.append('user has already existed')
-        else:
-            if password is not None:
-                 if password == password2:
-                      CompareFlag = True
-                 else:
-                    errors.append('The password is not same')
-            if account is not None and password is not None and password2 is not None and email is not None and CompareFlag:
-                user = User(username=account,password=password,email=email,company=company)
-                user.save()
-            # userlogin = auth.authenticate(username=account, password=password)
-            # auth.login(request, userlogin)
-            return HttpResponseRedirect('/login')
-
-    return  render(request,"register.html",{"errors":errors})
-def logout(request):
-    request.session.flush()
-    return HttpResponseRedirect('/pre')
 def home(request):
     num2 = 10
     if request.method == "POST":
