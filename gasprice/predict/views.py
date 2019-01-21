@@ -336,4 +336,21 @@ def backtest(request):
 def contact(request):
     return render(request,"contact.html")
 def blockexplorer(request):
-    return render(request,"block-explorer.html")
+    num2 = 20
+    infotype = request.GET.get("type", None)
+    info = request.GET.get("info", None)
+    if infotype == None:
+        blockheight = get_recent_block()
+        block_list = creat_block_list(blockheight, num2)
+        id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+        print("ok")
+        return render(request, 'block-explorer.html', {"height": block_list, "num": num_list, "lowprice": lowprice_list,"aveprice": aveprice_list})
+    else:
+        if infotype=='block':
+            list = get_block_info(info)
+            return render(request, 'block-explorer.html', {"type": infotype, "info": list})
+        else:
+            list = get_tran_info(info)
+            path = os.path.abspath('.')
+            return render(request, 'block-explorer.html', {"type": infotype, "info": list, "path": path})
+
