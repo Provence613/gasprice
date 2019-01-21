@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Block Explorer</title>
+<title>Detail Explorer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Baxster Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
@@ -50,11 +50,11 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 				<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right dev-page-sidebar mCustomScrollbar _mCS_1 mCS-autoHide mCS_no_scrollbar" id="cbp-spmenu-s1">
 					<div class="scrollbar scrollbar1">
 						<ul class="nav" id="side-menu">
-							<li>
+								<li>
 								<a href="/homedata"><i class="fa fa-home nav_icon"></i>Home</a>
 							</li>
                             <li>
-								<a href="/blockexplorerdata" class="active"><i class="fa fa-bar-chart nav_icon"></i>Block Explorer</a>
+								<a href="/blockexplorerdata"><i class="fa fa-bar-chart nav_icon"></i>Block Explorer</a>
 							</li>
 							<li>
 								<a href="/pre" ><i class="fa fa-cogs nav_icon"></i>Prediction</a>
@@ -119,17 +119,17 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 				<!--grids-->
 				<div class="grids">
 					<div class="progressbar-heading grids-heading">
-						<h2>Block Explorer</h2>
+						<h2 id="page-title">Data</h2>
 					</div>
 					<!-- animated-column-chart -->
-					<div class="chert-grids">
-					</div>
-						<div class="panel panel-widget">
-						<div class="tables">
-							<table class="table"> <thead> <tr> <th>Height</th> <th>Txns Num</th> <th>Lowest Gas Price</th> <th>Avg Gas Price</th> </tr> </thead> <tbody id="blockTableBody">  </tbody> </table>
-						</div>
-					</div>
+                        <div id="blockInfoPanel">
+						<div class="panel panel-widget"id="blockInfo"style="line-height:30px;">
 
+                        </div></div>
+                        <div id="txnInfoPanel">
+                        <div class="panel panel-widget"id="txnInfo"style="line-height:30px;">
+
+					    </div></div>
 					<!-- //animated-column-chart -->
 				</div>
 				<!--//grids-->
@@ -201,25 +201,29 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 		<!--//scrolling js-->
         <script>
 		$(document).ready(function () {
-                var heights =
-                {{ height }}
-                var nums =
-                {{ num }}
-                var lows =
-                {{ lowprice }}
-                var avgs =
-                {{ aveprice }}
-                var text = '';
-                for (var i = 0; i < heights.length; i++) {
-                    if (i % 3 == 0)
-                        text += '<tr class="active">';
-                    else if (i % 3 == 1)
-                        text += '<tr class="success">';
-                    text += '<th scope="row">' + heights[heights.length - i - 1] + '</th> <td>' + nums[nums.length - i - 1] + '+</td> <td>' + lows[lows.length - i - 1] + '</td> <td>' + avgs[avgs.length - i - 1] + '</td> </tr>';
-
+                var type="{{ type }}"
+                if(type=="block"){
+                    $("#txnInfoPanel").html("")
+                    $("#page-title").append("  -  Block "+"{{ info.1 }} Detail");
+                    var text="Height:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.1 }}"+"<br>";
+                    text+="Hash:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.0 }}"+"<br>";
+                    text+="Difficulty:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.2 }}"+"<br>";
+                    text+="Txns:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.4 }}"+"<br>";
+                    text+="Gas Limit:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.7 }}"+"<br>";
+                    text+="Gas Used:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.8 }}"+"<br>";
+                    $("#blockInfo").html(text)
                 }
-                $("#blockTableBody").html(text);
-
+                else{
+                    $("#blockInfoPanel").html("")
+                    $("#page-title").append("  -  Transaction Detail");
+                    var text="Hash:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.0 }}"+"<br>";
+                    text+="Block Height:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.1 }}"+"<br>";
+                    text+="From:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.2 }}"+"<br>";
+                    text+="To:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.3 }}"+"<br>";
+                    text+="Gas Limit:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.4 }}"+"<br>";
+                    text+="Gas Price:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.5 }}"+"<br>";
+                    $("#txnInfo").html(text)
+                }
 
         })
 		</script>

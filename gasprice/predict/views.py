@@ -423,4 +423,15 @@ def data(request):
         list = get_tran_info(info)
         path = os.path.abspath('.')
         return render(request, 'data.html', {"type": infotype, "info": list, "path": path})
+def datal(request):
+    infotype = request.GET.get("type", None)
+    info = request.GET.get("info", None)
+    if infotype == 'block':
+        print(info)
+        list = get_block_info(int(info))
+        return render(request, 'datal.html', {"type": infotype, "info": list})
+    else:
+        list = get_tran_info(info)
+        path = os.path.abspath('.')
+        return render(request, 'datal.html', {"type": infotype, "info": list, "path": path})
 
