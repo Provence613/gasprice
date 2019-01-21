@@ -1,126 +1,258 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Data</title>
-    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="../static/css/font-awesome/css/font-awesome.min.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="../static/css/Ionicons/css/ionicons.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="../static/css/AdminLTE.min.css">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="../static/css/_all-skins.min.css">
-  <!-- Morris chart -->
-  <link rel="stylesheet" href="../static/css/morris.css">
-  <!-- jvectormap -->
-  <link rel="stylesheet" href="../static/css/jquery-jvectormap.css">
-  <!-- Date Picker -->
-  <link rel="stylesheet" href="../static/css/bootstrap-datepicker.min.css">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="../static/css/daterangepicker.css">
-  <!-- bootstrap wysihtml5 - text editor -->
-  <link rel="stylesheet" href="../static/css/bootstrap3-wysihtml5.min.css">
-    <script src="../static/js/jquery.min.js"></script>
-    <script src="../static/js/Chart.js"></script>
+<title>Block Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Baxster Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
+SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Bootstrap Core CSS -->
+<link href="../static/Lee/css/bootstrap.css" rel='stylesheet' type='text/css' />
+<!-- Custom CSS -->
+<link href="../static/Lee/css/style.css" rel='stylesheet' type='text/css' />
+<!-- font CSS -->
+<link rel="icon" href="../static/Lee/favicon.ico" type="image/x-icon" >
+<!-- font-awesome icons -->
+<link href="../static/Lee/css/font-awesome.css" rel="stylesheet">
+<!-- //font-awesome icons -->
+<!-- chart -->
+<script src="../static/Lee/js/Chart.js"></script>
+<!-- //chart -->
+ <!-- js-->
+<script src="../static/Lee/js/jquery-1.11.1.min.js"></script>
+<script src="../static/Lee/js/modernizr.custom.js"></script>
+<!--webfonts-->
+<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+<!--//webfonts-->
+<!--animate-->
+<link href="../static/Lee/css/animate.css" rel="stylesheet" type="text/css" media="all">
+<script src="../static/Lee/js/wow.min.js"></script>
+	<script>
+		 new WOW().init();
+	</script>
+<!--//end-animate-->
+<!-- Metis Menu -->
+<script src="../static/Lee/js/metisMenu.min.js"></script>
+<script src="../static/Lee/js/custom.js"></script>
+<link href="../static/Lee/css/custom.css" rel="stylesheet">
+<!--//Metis Menu -->
+<!-- charts -->
+<link rel="stylesheet" href="../static/Lee/css/barChart.css" />
+<!-- //charts -->
+<link href="../static/Lee/css/fabochart.css" rel="stylesheet" type="text/css">
 </head>
-<body>
-<form action="/data/" method="post" class="box-tools">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                  <input type="text" name="num2" class="form-control pull-right" placeholder="block num">
+<body class="cbp-spmenu-push">
+	<div class="main-content">
+		<!--left-fixed -navigation-->
+		<div class="sidebar" role="navigation">
+            <div class="navbar-collapse">
+				<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right dev-page-sidebar mCustomScrollbar _mCS_1 mCS-autoHide mCS_no_scrollbar" id="cbp-spmenu-s1">
+					<div class="scrollbar scrollbar1">
+						<ul class="nav" id="side-menu">
+							<li>
+								<a href="/home"><i class="fa fa-home nav_icon"></i>Home</a>
+							</li>
+							<li>
+								<a href="#"><i class="fa fa-cogs nav_icon"></i>Estimate<span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level collapse">
+									<li>
+										<a href="/forecast">Forecast</a>
+									</li>
+									<li>
+										<a href="/backtest">Back Test</a>
+									</li>
+								</ul>
+								<!-- /nav-second-level -->
+							</li>
+								<li>
+									<a href="#"><i class="fa fa-bar-chart nav_icon"></i>Data<span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level collapse">
+								<!--	<li>
+										<a href="gastracker.html">Gas Tracker</a>
+								</li>-->
+									<li>
+										<a href="/blockexplorer" class="active">Block Explorer</a>
+									</li>
+								</ul>
+								<!-- /nav-second-level -->
+							</li>
+							<li>
+								<a href="#" class="chart-nav"><i class="fa fa-list-ul nav_icon"></i>Extras<span class="fa arrow"></span></a>
+								<ul class="nav nav-second-level collapse">
+									<li>
+										<a href="/contact">Contact us</a>
+									</li>
+									<li>
+										<a href="/about">About</a>
+									</li>
+								</ul>
+								<!-- //nav-second-level -->
+							</li>
+						</ul>
+					</div>
+					<!-- //sidebar-collapse -->
+				</nav>
+			</div>
+		</div>
+		<!--left-fixed -navigation-->
+		<!-- header-starts -->
+		<div class="sticky-header header-section ">
+			<div class="header-left">
+				<!--logo -->
+				<div class="logo">
+					<a href="/home">
+						<ul>
+							<li><img src="../static/Lee/images/logo1.png" alt="" /></li>
+							<li><h1>GasScan</h1></li>
+							<div class="clearfix"> </div>
+						</ul>
+					</a>
+				</div>
+				<!--//logo-->
+				<div class="header-right header-right-grid">
+					<div class="profile_details_left"><!--notifications of menu start -->
+						<div class="clearfix"> </div>
+					</div>
+				</div>
 
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                  </div>
+
+				<div class="clearfix"> </div>
+			</div>
+			<!--search-box-->
+            <script src="../static/Lee/js/search.js"></script>
+				<div class="search-box">
+					<!--<form class="input">-->
+						<input onkeyup="searchInfo()" class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-info" />
+
+					<!--</form>-->
+				</div>
+				<!--//end-search-box-->
+			<div class="header-right">
+
+				<!--notification menu end -->
+							<!--toggle button start-->
+				<button id="showLeftPush"><i class="fa fa-bars"></i></button>
+				<!--toggle button end-->
+				<div class="clearfix"> </div>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+		<!-- //header-ends -->
+		<!-- main content start-->
+		<div id="page-wrapper">
+			<div class="main-page">
+				<!--grids-->
+				<div class="grids">
+					<div class="progressbar-heading grids-heading">
+						<h2 id="page-title">Data</h2>
+					</div>
+					<!-- animated-column-chart -->
+                        <div id="blockInfoPanel">
+						<div class="panel panel-widget"id="blockInfo"style="line-height:30px;">
+
+                        </div></div>
+                        <div id="txnInfoPanel">
+                        <div class="panel panel-widget"id="txnInfo"style="line-height:30px;">
+
+					    </div></div>
+					<!-- //animated-column-chart -->
+				</div>
+				<!--//grids-->
+
+			</div>
+		</div>
+		<!--footer-->
+		 <div class="dev-page">
+
+			<!-- page footer -->
+			<!-- dev-page-footer-closed dev-page-footer-fixed -->
+            <div class="dev-page-footer dev-page-footer-fixed">
+				<!-- container -->
+			<div class="container">
+					<div class="copyright">
+						<p>Copyright &copy; 2019 Lee</p>
+					</div>
+					<!-- //page footer buttons -->
+					<!-- page footer container -->
+                <!-- //page footer container -->
+
                 </div>
-              </form>
-<div class="box-body table-responsive no-padding"  style="OVERFLOW-Y: auto; height: 400px">
-{{ height}}<br>{{ num }}<br>{{ lowprice }}<br>{{ aveprice }}
-</div>
-<div style="width: 50%">
-			<canvas id="canvas1" height="1000" width="1000"></canvas>
+				<!-- //container -->
+            </div>
+            <!-- /page footer -->
 		</div>
-<div style="width: 50%">
-			<canvas id="canvas2" height="1000" width="1000"></canvas>
-		</div>
-<div style="width: 50%">
-			<canvas id="canvas3" height="1000" width="1000"></canvas>
-		</div>
-<script type="text/javascript">
+        <!--//footer-->
+	</div>
+	<!-- Classie -->
+		<script src="../static/Lee/js/classie.js"></script>
+		<script>
+			var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
+				showLeftPush = document.getElementById( 'showLeftPush' ),
+				body = document.body;
 
-    //列表
-    var List = {{ height}};
-    //下面的代码把List的每一部分放到头部和尾部
-    {#$('#list').html(List);#}
-    var lineChartData1 = {
-		labels : {{ label }},
-		datasets : [
-			{
-					label: "My First dataset",
-					fillColor : "rgba(220,220,220,0.2)",
-					strokeColor : "rgba(220,220,220,1)",
-					pointColor : "rgba(220,220,220,1)",
-					pointStrokeColor : "#fff",
-					pointHighlightFill : "#fff",
-					pointHighlightStroke : "rgba(220,220,220,1)",
-					data : {{ num }}
+			showLeftPush.onclick = function() {
+				classie.toggle( this, 'active' );
+				classie.toggle( body, 'cbp-spmenu-push-toright' );
+				classie.toggle( menuLeft, 'cbp-spmenu-open' );
+				disableOther( 'showLeftPush' );
+			};
+
+
+			function disableOther( button ) {
+				if( button !== 'showLeftPush' ) {
+					classie.toggle( showLeftPush, 'disabled' );
 				}
-		]
+			}
+		</script>
+	<!-- Bootstrap Core JavaScript -->
 
-	}
-	var lineChartData2 = {
-		labels : {{ label }},
-		datasets : [
-			{
-					label: "My First dataset",
-					fillColor : "rgba(220,220,220,0.2)",
-					strokeColor : "rgba(220,220,220,1)",
-					pointColor : "rgba(220,220,220,1)",
-					pointStrokeColor : "#fff",
-					pointHighlightFill : "#fff",
-					pointHighlightStroke : "rgba(220,220,220,1)",
-					data : {{ lowprice }}
-				}
-		]
+        <script type="text/javascript" src="../static/Lee/js/bootstrap.min.js"></script>
 
-	}
-	var lineChartData3 = {
-		labels : {{ label }},
-		datasets : [
-			{
-					label: "My First dataset",
-					fillColor : "rgba(220,220,220,0.2)",
-					strokeColor : "rgba(220,220,220,1)",
-					pointColor : "rgba(220,220,220,1)",
-					pointStrokeColor : "#fff",
-					pointHighlightFill : "#fff",
-					pointHighlightStroke : "rgba(220,220,220,1)",
-					data : {{ aveprice }}
-				}
-		]
+        <script type="text/javascript" src="../static/Lee/js/dev-loaders.js"></script>
+        <script type="text/javascript" src="../static/Lee/js/dev-layout-default.js"></script>
+		<script type="text/javascript" src="../static/Lee/js/jquery.marquee.js"></script>
+		<link href="../static/Lee/css/bootstrap.min.css" rel="stylesheet">
 
-	}
+		<script type="text/javascript" src="../static/Lee/js/jquery.jqcandlestick.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../static/Lee/css/jqcandlestick.css" />
 
-	window.onload = function(){
+		<!--max-plugin-->
+		<script type="text/javascript" src="../static/Lee/js/plugins.js"></script>
+		<!--//max-plugin-->
 
-		var ctx = document.getElementById("canvas1").getContext("2d");
-		window.myLine = new Chart(ctx).Line(lineChartData1, {
-			responsive: true
-		});
-		var ctx1 = document.getElementById("canvas2").getContext("2d");
-		window.myLine = new Chart(ctx1).Line(lineChartData2, {
-			responsive: true
-		});
-		var ctx2 = document.getElementById("canvas3").getContext("2d");
-		window.myLine = new Chart(ctx2).Line(lineChartData3, {
-			responsive: true
-		});
+		<!--scrolling js-->
+		<script src="../static/Lee/js/jquery.nicescroll.js"></script>
+		<script src="../static/Lee/js/scripts.js"></script>
+		<!--//scrolling js-->
+        <script>
+		$(document).ready(function () {
+                var type="{{ type }}"
+                if(type=="block"){
+                    $("#txnInfoPanel").html("")
+                    $("#page-title").append("  -  Block "+"{{ info.1 }} Detail");
+                    var text="Height:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.1 }}"+"<br>";
+                    text+="Hash:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.0 }}"+"<br>";
+                    text+="Difficulty:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.2 }}"+"<br>";
+                    text+="Txns:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.4 }}"+"<br>";
+                    text+="Gas Limit:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.7 }}"+"<br>";
+                    text+="Gas Used:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.8 }}"+"<br>";
+                    $("#blockInfo").html(text)
+                }
+                else{
+                    $("#blockInfoPanel").html("")
+                    $("#page-title").append("  -  Transaction Detail");
+                    var text="Hash:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.0 }}"+"<br>";
+                    text+="Block Height:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.1 }}"+"<br>";
+                    text+="From:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.2 }}"+"<br>";
+                    text+="To:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.3 }}"+"<br>";
+                    text+="Gas Limit:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.4 }}"+"<br>";
+                    text+="Gas Price:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"{{ info.5 }}"+"<br>";
+                    $("#txnInfo").html(text)
+                }
 
+        })
+		</script>
 
-	}
-
-    </script>
 </body>
 </html>

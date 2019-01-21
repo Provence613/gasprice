@@ -119,12 +119,13 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 				
 				<div class="clearfix"> </div>
 			</div>
+            <script src="../static/Lee/js/search.js"></script>
 			<!--search-box-->
 				<div class="search-box">
-					<form class="input">
-						<input class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-31" />
-						
-					</form>
+					<!--<form class="input">-->
+						<input onkeyup="searchInfo()" class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-info" />
+
+					<!--</form>-->
 				</div>
 				<!--//end-search-box-->
 			<div class="header-right">
@@ -147,14 +148,14 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 						<h2>Block Explorer</h2>
 					</div>
 					<!-- animated-column-chart -->
-					<div class="chert-grids">
-					</div>
-						<div class="panel panel-widget">
-						<div class="tables">
-							<table class="table"> <thead> <tr> <th>Height</th> <th>Txns Num</th> <th>Lowest Gas Price</th> <th>Avg Gas Price</th> </tr> </thead> <tbody id="blockTableBody">  </tbody> </table>
-						</div>
-					</div>
 
+						<div class="panel panel-widget"id="blockTable">
+                            <div class="tables">
+                                <table class="table"> <thead> <tr> <th>Height</th> <th>Txns Num</th> <th>Lowest Gas Price</th> <th>Avg Gas Price</th> </tr>
+
+                                </thead> <tbody id="blockTableBody">  </tbody> </table>
+                            </div>
+					    </div>
 					<!-- //animated-column-chart -->
 				</div>
 				<!--//grids-->
@@ -244,6 +245,8 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 
                 }
                 $("#blockTableBody").html(text);
+
+
 
 
         })

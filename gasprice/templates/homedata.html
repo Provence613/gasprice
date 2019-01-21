@@ -97,23 +97,8 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 
 				<div class="clearfix"> </div>
 			</div>
-            <script type="text/javascript">
-
-                function searchInfo(){
-                var code = event.keyCode;
-                if(code == 13){
-                    var info=document.getElementById("input-info").value;
-                    //alert(info.length)
-                    if(info.length<8)
-                window.location.href="/blockexplorer?info="+info+"&type=block";
-                    else
-                window.location.href="/blockexplorer?info="+info+"&type=txn";
-                }
-
-                }
-
-            </script>
-			<!--search-box-->
+           <!--search-box-->
+            <script src="../static/Lee/js/search.js"></script>
 				<div class="search-box">
 					<!--<form class="input">-->
 						<input onkeyup="searchInfo()" class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-info" />
