@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Block Explorer</title>
+<title>Home</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="Baxster Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+<meta name="keywords" content="Baxster Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
 SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!-- Bootstrap Core CSS -->
@@ -24,7 +24,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 <script src="../static/Lee/js/modernizr.custom.js"></script>
 <!--webfonts-->
 <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
-<!--//webfonts--> 
+<!--//webfonts-->
 <!--animate-->
 <link href="../static/Lee/css/animate.css" rel="stylesheet" type="text/css" media="all">
 <script src="../static/Lee/js/wow.min.js"></script>
@@ -41,7 +41,8 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 <link rel="stylesheet" href="../static/Lee/css/barChart.css" />
 <!-- //charts -->
 <link href="../static/Lee/css/fabochart.css" rel="stylesheet" type="text/css">
-</head> 
+    <script></script>
+</head>
 <body class="cbp-spmenu-push">
 	<div class="main-content">
 		<!--left-fixed -navigation-->
@@ -51,7 +52,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 					<div class="scrollbar scrollbar1">
 						<ul class="nav" id="side-menu">
 							<li>
-								<a href="/home"><i class="fa fa-home nav_icon"></i>Home</a>
+								<a href="/home"class="active"><i class="fa fa-home nav_icon"></i>Home</a>
 							</li>
 							<li>
 								<a href="#"><i class="fa fa-cogs nav_icon"></i>Estimate<span class="fa arrow"></span></a>
@@ -72,7 +73,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 										<a href="gastracker.html">Gas Tracker</a>
 								</li>-->
 									<li>
-										<a href="/blockexplorer" class="active">Block Explorer</a>
+										<a href="/blockexplorer">Block Explorer</a>
 									</li>
 								</ul>
 								<!-- /nav-second-level -->
@@ -102,7 +103,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 				<!--logo -->
 				<div class="logo">
 					<a href="/home">
-						<ul>	
+						<ul>
 							<li><img src="../static/Lee/images/logo1.png" alt="" /></li>
 							<li><h1>GasScan</h1></li>
 							<div class="clearfix"> </div>
@@ -115,45 +116,132 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 						<div class="clearfix"> </div>
 					</div>
 				</div>
-				
-				
+
+
 				<div class="clearfix"> </div>
 			</div>
+            <script type="text/javascript">
+
+                function searchInfo(){
+                var code = event.keyCode;
+                if(code == 13){
+                    var info=document.getElementById("input-info").value;
+                    //alert(info.length)
+                    if(info.length<8)
+                window.location.href="/blockexplorer?info="+info+"&type=block";
+                    else
+                window.location.href="/blockexplorer?info="+info+"&type=txn";
+                }
+
+                }
+
+            </script>
 			<!--search-box-->
 				<div class="search-box">
-					<form class="input">
-						<input class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-31" />
-						
-					</form>
+					<!--<form class="input">-->
+						<input onkeyup="searchInfo()" class="sb-search-input input__field--madoka" placeholder="Search..." type="search" id="input-info" />
+
+					<!--</form>-->
 				</div>
 				<!--//end-search-box-->
 			<div class="header-right">
-				
+
 				<!--notification menu end -->
 							<!--toggle button start-->
 				<button id="showLeftPush"><i class="fa fa-bars"></i></button>
 				<!--toggle button end-->
-				<div class="clearfix"> </div>				
+				<div class="clearfix"> </div>
 			</div>
-			<div class="clearfix"> </div>	
+			<div class="clearfix"> </div>
 		</div>
 		<!-- //header-ends -->
 		<!-- main content start-->
 		<div id="page-wrapper">
 			<div class="main-page">
 				<!--grids-->
+                <div class="progressbar-heading grids-heading">
+						<h2>Home</h2>
+                </div>
+                        <div class="row four-grids">
+            <div class="col-md-3 ticket-grid">
+                <div class="tickets">
+                    <div class="grid-right">
+                        <h3>Last Block</h3>
+                        <p id="heightLabel"></p>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+            <div class="col-md-3 ticket-grid">
+                <div class="tickets">
+                    <div class="grid-right">
+                        <h3>Low Gas Price (gWei)</h3>
+                        <p id="lowPriceLabel"></p>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+            <div class="col-md-3 ticket-grid">
+                <div class="tickets">
+                    <div class="grid-right">
+                        <h3>Avg Gas Price (gWei)</h3>
+                        <p id="avgPriceLabel"></p>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+            <div class="col-md-3 ticket-grid">
+                <div class="tickets">
+                    <div class="grid-right">
+                        <h3>Avg Duration Time(s)</h3>
+                        <p>12</p>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+
 				<div class="grids">
-					<div class="progressbar-heading grids-heading">
-						<h2>Block Explorer</h2>
-					</div>
+
 					<!-- animated-column-chart -->
 					<div class="chert-grids">
-					</div>
-						<div class="panel panel-widget">
-						<div class="tables">
-							<table class="table"> <thead> <tr> <th>Height</th> <th>Txns Num</th> <th>Lowest Gas Price</th> <th>Avg Gas Price</th> </tr> </thead> <tbody id="blockTableBody">  </tbody> </table>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="panel panel-widget">
+									<div class="button-heading">
+										<h4>Txns in Last Blocks</h4>
+									</div>
+									<div id="chart1"></div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="panel panel-widget">
+									<div class="button-heading">
+										<h4>Low Gas Price in Last Blocks</h4>
+									</div>
+									<div id="chart2"></div>
+								</div>
+							</div>
+                            <div class="col-md-6">
+								<div class="panel panel-widget">
+									<div class="button-heading">
+										<h4>Avg Gas Price in Last Blocks</h4>
+									</div>
+									<div id="chart3"></div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="panel panel-widget">
+									<div class="button-heading">
+										<h4>Avg Duration in Last Blocks</h4>
+									</div>
+									<div id="chart4"></div>
+								</div>
+							</div>
+							<div class="clearfix"> </div>
+
 						</div>
-					</div>
 
 					<!-- //animated-column-chart -->
 				</div>
@@ -224,30 +312,65 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 		<script src="../static/Lee/js/jquery.nicescroll.js"></script>
 		<script src="../static/Lee/js/scripts.js"></script>
 		<!--//scrolling js-->
-        <script>
+		<!-- charts -->
+
+		<!-- animated-column-chart -->
+		<script src="../static/Lee/js/fabochart.js"></script>
+		<script>
 		$(document).ready(function () {
-                var heights =
-                {{ height }}
-                var nums =
-                {{ num }}
-                var lows =
-                {{ lowprice }}
-                var avgs =
-                {{ aveprice }}
-                var text = '';
-                for (var i = 0; i < heights.length; i++) {
-                    if (i % 3 == 0)
-                        text += '<tr class="active">';
-                    else if (i % 3 == 1)
-                        text += '<tr class="success">';
-                    text += '<th scope="row">' + heights[heights.length - i - 1] + '</th> <td>' + nums[nums.length - i - 1] + '+</td> <td>' + lows[lows.length - i - 1] + '</td> <td>' + avgs[avgs.length - i - 1] + '</td> </tr>';
-
+		    var num={{ num }}
+            var bheight=  {{ height }}
+            document.getElementById('heightLabel').innerHTML = bheight[9];
+                data1={};
+        for (var i = 1; i < 11; i++) {
+            data1[(11-i).toString()] = num[i - 1];
+        }
+            var low={{ lowprice }}
+            document.getElementById('lowPriceLabel').innerHTML = low[9];
+            data2={};
+        for (var i = 1; i < 11; i++) {
+                    data2[(11-i).toString()] = low[i - 1];
                 }
-                $("#blockTableBody").html(text);
-
-
-        })
+            var avg={{ aveprice }}
+            document.getElementById('avgPriceLabel').innerHTML = avg[9];
+            data3={};
+        for (var i = 1; i < 11; i++) {
+                    data3[(11-i).toString()] = avg[i - 1];
+                }
+			$("#chart1").faBoChart({
+			  time: 500,
+			  animate: true,
+			  instantAnimate: true,
+			  straight: false,
+			  data: data1,
+			  labelTextColor : "#C0392B",
+			});
+			$("#chart2").faBoChart({
+			  time: 500,
+			  animate: true,
+			  instantAnimate: true,
+			  straight: false,
+			  data: data2,
+			  labelTextColor : "#C0392B",
+			});
+			$("#chart3").faBoChart({
+			  time: 500,
+			  animate: true,
+			  instantAnimate: true,
+			  straight: false,
+			  data: data3,
+			  labelTextColor : "#C0392B",
+			});
+			$("#chart4").faBoChart({
+			  time: 500,
+			  animate: true,
+			  instantAnimate: true,
+			  straight: false,
+			  data: data2,
+			  labelTextColor : "#C0392B",
+			});
+		});
 		</script>
-
 </body>
 </html>
+

@@ -74,8 +74,7 @@ def get_tran_info(TX_HASH):
 def detailtx(request):
     tx_hash=request.GET.get("hash",None)
     list=get_tran_info(tx_hash)
-    path=os.path.abspath('.')
-    return render(request, 'detailtx.html',{"tran":list,"path":path})
+    return render(request, 'detailtx.html',{"tran":list})
 def get_block_info(blocknumber):
     block = api.get_block_by_number(blocknumber)
     info=[]
@@ -104,6 +103,32 @@ def data(request):
     block_list=creat_block_list(blockheight,num2)
     id_list,num_list, lowprice_list, aveprice_list=get_tran_Data(block_list)
     return render(request, 'data.html', {"label":id_list,"height":block_list,"num":num_list,"lowprice":lowprice_list,"aveprice":aveprice_list})
+def get_pre_Data(block_list):
+    # height_list=[] #blockheight
+    maxprice_list=[]
+    lowprice_list=[] #low price
+    aveprice_list=[] #average price
+    timestamp_list=[]
+    for blockheight in block_list:
+        block = api.get_block_by_number(blockheight)
+        # print(type(block))
+        # print("Transaction num is {}".format(len(block['transactions'])))
+        if len(block['transactions'])==0:
+            lowprice_list.append(0)
+            aveprice_list.append(0)
+            maxprice_list.append(0)
+        else:
+            gasprice=[]
+            for row in block['transactions']:
+                gasprice.append(round(int(row['gasPrice'],16)/1000000000,2))
+            # print("The min gasprice is {} in block {}".format(min(gasprice),blockheight))
+            lowprice_list.append(min(gasprice))
+            maxprice_list.append(max(gasprice))
+            aveprice_list.append(round(np.mean(gasprice),2))
+        timestamp_list.append(int(block['timestamp'],16))
+        # height_list.append(blockheight)
+        # print(int(block['transactions'][1]['gasPrice'],16))
+    return lowprice_list,aveprice_list,maxprice_list,timestamp_list
 def show(request):
     if request.session.get('is_login') == '1':
         uname = request.session['username']
@@ -183,10 +208,17 @@ def eval(request):
         real_list.append(real)
         pred_list.append(pred)
         error_list.append(error)
-    return render(request,'eval.html',{"data": data1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"uname":uname})
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres group by i_p;")
+    results1 = cursor.fetchall()
+    label_list = ['<1', '1<5', '5<10', '10<15', '>15']
+    count_list=[]
+    for row in results1:
+        trancount = row[1]
+        count_list.append(trancount)
+    return render(request,'eval.html',{"data": data1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"uname":uname,"label1":label_list,"List4":count_list})
 def process_data():
-    cols = ['difficulty', 'gaslimit', 'gasused', 'gaspricel1', 'gaspricel2']
-    data_df = pd.read_csv("./transaction.csv")
+    cols = ['difficulty', 'gaslimit', 'gasused', 'gaspricel1','confirmtime','timespan1']
+    data_df = pd.read_csv("./transaction2.csv")
     # cols=['difficulty','gaspricel1','gaspricel2']
     X=data_df[cols]
     y=data_df['gasprice']
@@ -215,32 +247,48 @@ def pre(request):
         uname=''
     contime=20
     # price=20
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM transinfo ORDER BY height DESC LIMIT 1")
-    # 使用一个变量来接收查询到的数据，
-    # fetchall（）返回查询到的所有数据
-    results = cursor.fetchall()
-    for row in results:
-        gasprice=row[1]
-        height= row[2]
-        gaslimit = row[4]
-        gasused = row[5]
-        std=row[7]
-        difficulty=row[3]
-        gaspricel1=row[8]
-        gaspricel2=row[9]
-        maxprice=row[10]
+    blockheight = get_recent_block()
+    block_list = creat_block_list(blockheight, 2)
+    lowprice_list, aveprice_list, maxprice_list,timestamp_list = get_pre_Data(block_list)
+    gaspricel1=lowprice_list[0]
+    gaspricel2=lowprice_list[1]
+    std=aveprice_list[0]
+    maxprice=maxprice_list[0]
+    timespan1=timestamp_list[0]-timestamp_list[1]
+    block = api.get_block_by_number(blockheight)
+    difficulty=int(block['difficulty'],16)
+    gaslimit=int(block['gasLimit'],16)
+    gasused=int(block['gasUsed'],16)
+    # cursor = connection.cursor()
+    # cursor.execute("SELECT * FROM transinfo ORDER BY height DESC LIMIT 1")
+    # # 使用一个变量来接收查询到的数据，
+    # # fetchall（）返回查询到的所有数据
+    # results = cursor.fetchall()
+    # for row in results:
+    #     gasprice=row[1]
+    #     height= row[2]
+    #     gaslimit = row[4]
+    #     gasused = row[5]
+    #     std=row[7]
+    #     difficulty=row[3]
+    #     gaspricel1=row[8]
+    #     gaspricel2=row[9]
+    #     maxprice=row[10]
     rate=round((gasused/gaslimit)*100,2)
-    price=gasprice
+    price=gaspricel1
     if request.method == "POST":
         time=int(request.POST.get("confirmtime",None))
-        test = np.array([[difficulty, gaslimit, gasused, gaspricel1, gaspricel2]])
+        gaslimit=int(request.POST.get("gaslimit",None))
+        gasused=rate*gaslimit/100
+        test = np.array([[difficulty, gaslimit, gasused, gaspricel1,time,timespan1]])
         price=predict_data(test)
         price=round(price,2)
         if price> std:
             std=price
+        if price>maxprice:
+            maxprice=price
         contime=time
-    return render(request,'pre.html',{"height":height,"rate":rate,"confirm":contime,"price":price,"std":std,"maxprice":maxprice,"uname":uname})
+    return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1})
 def login(request):
     errors = []
     account = None
@@ -317,7 +365,29 @@ def logout(request):
     request.session.flush()
     return HttpResponseRedirect('/pre')
 def home(request):
-    return render(request,"home.html")
+    num2 = 10
+    if request.method == "POST":
+        num2 = int(request.POST.get("num2", None))
+    blockheight = get_recent_block()
+    block_list = creat_block_list(blockheight, num2)
+    id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+    return render(request, 'home.html',
+                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
+                   "aveprice": aveprice_list})
+    #return render(request,"home.html")
+<<<<<<< HEAD
+def homedata(request):
+    num2 = 10
+    if request.method == "POST":
+        num2 = int(request.POST.get("num2", None))
+    blockheight = get_recent_block()
+    block_list = creat_block_list(blockheight, num2)
+    id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+    return render(request, 'homedata.html',
+                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
+                   "aveprice": aveprice_list})
+=======
+>>>>>>> a3232fc00c41f5dc1d05aadb423b89addfaf951e
 def about(request):
     return render(request,"about.html")
 def forecast(request):
@@ -327,4 +397,43 @@ def backtest(request):
 def contact(request):
     return render(request,"contact.html")
 def blockexplorer(request):
-    return render(request,"block-explorer.html")
+    num2 = 20
+    infotype = request.GET.get("type", None)
+    info = request.GET.get("info", None)
+    if infotype == None:
+        blockheight = get_recent_block()
+        block_list = creat_block_list(blockheight, num2)
+        id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+        print("ok")
+        return render(request, 'block-explorer.html', {"height": block_list, "num": num_list, "lowprice": lowprice_list,"aveprice": aveprice_list})
+    else:
+        if infotype=='block':
+            list = get_block_info(info)
+            return render(request, 'block-explorer.html', {"type": infotype, "info": list})
+        else:
+            list = get_tran_info(info)
+            path = os.path.abspath('.')
+            return render(request, 'block-explorer.html', {"type": infotype, "info": list, "path": path})
+
+<<<<<<< HEAD
+def blockexplorerdata(request):
+    num2 = 20
+    infotype = request.GET.get("type", None)
+    info = request.GET.get("info", None)
+    if infotype == None:
+        blockheight = get_recent_block()
+        block_list = creat_block_list(blockheight, num2)
+        id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+        print("ok")
+        return render(request, 'blockexplorerdata.html', {"height": block_list, "num": num_list, "lowprice": lowprice_list,"aveprice": aveprice_list})
+    else:
+        if infotype=='block':
+            list = get_block_info(info)
+            return render(request, 'blockexplorerdata.html', {"type": infotype, "info": list})
+        else:
+            list = get_tran_info(info)
+            path = os.path.abspath('.')
+            return render(request, 'blockexplorerdata.html', {"type": infotype, "info": list, "path": path})
+
+=======
+>>>>>>> a3232fc00c41f5dc1d05aadb423b89addfaf951e

@@ -5,7 +5,18 @@
     <title>Title</title>
 </head>
 <body>
-{{ path }}<br>
+<div id="str"></div>
+<div id="val"></div>
 detail{{ tran }}
+<br>
+1.{{ tran.0 }}
+<script type="text/javascript">
+    var b={{ tran|safe }}
+    var str='{{ tran.0 |safe}}'
+    var val={{ tran.1|safe }}
+    document.getElementById("str").innerHTML =str;
+    document.getElementById("val").innerHTML =val;
+    </script>
 </body>
+
 </html>
