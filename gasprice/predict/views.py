@@ -17,6 +17,8 @@ import pandas as pd
 import numpy as np
 import os
 from etherscan.proxies import Proxies
+import  urllib
+from urllib.request import urlretrieve
 # 全局变量
 with open('./api_key.json', mode='r') as key_file:
     key = json.loads(key_file.read())['key']
@@ -37,6 +39,7 @@ def get_tran_Data(block_list):
     # height_list=[] #blockheight
     num_list=[] #transaction num
     lowprice_list=[] #low price
+    maxprice_list=[]
     aveprice_list=[] #average price
     id_list=[]
     i=1
@@ -48,6 +51,7 @@ def get_tran_Data(block_list):
         id_list.append(i)
         if len(block['transactions'])==0:
             lowprice_list.append(0)
+            maxprice_list.append(0)
             aveprice_list.append(0)
         else:
             gasprice=[]
@@ -55,11 +59,12 @@ def get_tran_Data(block_list):
                 gasprice.append(round(int(row['gasPrice'],16)/1000000000,2))
             # print("The min gasprice is {} in block {}".format(min(gasprice),blockheight))
             lowprice_list.append(min(gasprice))
+            maxprice_list.append(max(gasprice))
             aveprice_list.append(round(np.mean(gasprice),2))
         i=i+1
         # height_list.append(blockheight)
         # print(int(block['transactions'][1]['gasPrice'],16))
-    return id_list,num_list,lowprice_list,aveprice_list
+    return id_list,num_list,lowprice_list,aveprice_list,maxprice_list
 def get_tran_info(TX_HASH):
     transaction = api.get_transaction_by_hash(tx_hash=TX_HASH)
     info=[]
@@ -214,7 +219,7 @@ def home(request):
         num2 = int(request.POST.get("num2", None))
     blockheight = get_recent_block()
     block_list = creat_block_list(blockheight, num2)
-    id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+    id_list, num_list, lowprice_list, aveprice_list,maxprice_list = get_tran_Data(block_list)
     return render(request, 'home.html',
                   {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
                    "aveprice": aveprice_list})
@@ -226,7 +231,7 @@ def homedata(request):
         num2 = int(request.POST.get("num2", None))
     blockheight = get_recent_block()
     block_list = creat_block_list(blockheight, num2)
-    id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+    id_list, num_list, lowprice_list, aveprice_list,maxprice_list = get_tran_Data(block_list)
     return render(request, 'homedata.html',
                   {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
                    "aveprice": aveprice_list})
@@ -245,7 +250,7 @@ def blockexplorer(request):
     if infotype == None:
         blockheight = get_recent_block()
         block_list = creat_block_list(blockheight, num2)
-        id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
+        id_list, num_list, lowprice_list, aveprice_list ,maxprice_list= get_tran_Data(block_list)
         print("ok")
         return render(request, 'block-explorer.html', {"height": block_list, "num": num_list, "lowprice": lowprice_list,"aveprice": aveprice_list})
     else:
@@ -259,10 +264,22 @@ def blockexplorer(request):
 
 def blockexplorerdata(request):
     num2 = 20
-    blockheight = get_recent_block()
-    block_list = creat_block_list(blockheight, num2)
-    id_list, num_list, lowprice_list, aveprice_list = get_tran_Data(block_list)
-    return render(request, 'blockexplorerdata.html', {"height": block_list, "num": num_list, "lowprice": lowprice_list,"aveprice": aveprice_list})
+    infotype = request.GET.get("type", None)
+    info = request.GET.get("info", None)
+    if infotype == None:
+        blockheight = get_recent_block()
+        block_list = creat_block_list(blockheight, num2)
+        id_list, num_list, lowprice_list, aveprice_list, maxprice_list = get_tran_Data(block_list)
+        print("ok")
+        return render(request, 'blockexplorerdata.html',{"height": block_list, "num": num_list, "lowprice": lowprice_list, "aveprice": aveprice_list})
+    else:
+        if infotype == 'block':
+            list = get_block_info(int(info))
+            return render(request, 'blockexplorerdata.html', {"type": infotype, "info": list})
+        else:
+            list = get_tran_info(info)
+            path = os.path.abspath('.')
+            return render(request, 'blockexplorerdata.html', {"type": infotype, "info": list, "path": path})
 
 def data(request):
     infotype = request.GET.get("type", None)
@@ -286,4 +303,51 @@ def datal(request):
         list = get_tran_info(info)
         path = os.path.abspath('.')
         return render(request, 'datal.html', {"type": infotype, "info": list, "path": path})
+def gasapi(request):
+    time = request.GET.get("time", None)
+    gaslimit = request.GET.get("gaslimit", None)
+    price = request.GET.get("price", None)
+    if time != None and gaslimit != None:
+        time = int(time)
+        gaslimit = int(gaslimit)
+        blockheight = get_recent_block()
+        block_list = creat_block_list(blockheight, 2)
+        lowprice_list, aveprice_list, maxprice_list, timestamp_list = get_pre_Data(block_list)
+        gaspricel1 = lowprice_list[0]
+        timespan1 = timestamp_list[0] - timestamp_list[1]
+        block = api.get_block_by_number(blockheight)
+        difficulty = int(block['difficulty'], 16)
+        gaslimitl1 = int(block['gasLimit'], 16)
+        gasusedl1 = int(block['gasUsed'], 16)
+        rate = round((gasusedl1 / gaslimitl1) * 100, 2)
+        gasused = rate * gaslimit / 100
+        test = np.array([[difficulty, gaslimit, gasused, gaspricel1, time, timespan1]])
+        gasprice = predict_data(test)
+        gasprice = str(round(gasprice, 2))
+        return JsonResponse({'gasprice': gasprice, 'confirmtime': time, 'gaslimit': gaslimit, 'message': "predict gasprice"})
+    elif price != None and gaslimit != None:
+        confirm = int(price) + int(gaslimit)
+        return JsonResponse({'confimetime': confirm, 'gasprice': price, 'gaslimit': gaslimit, 'message': "predict confirmtime"})
+    else:
+        return JsonResponse({"status": "0", "message": "NOTOK", "result": "Invalid API URL endpoint, use api.gaspricing.io"})
+#Newly added information about chart data
+def fetch_info(urls,outputfile):
+    headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0;WOW64;rv:64.0) Gecko/20100101 Firefox/64.0'}
+    req = urllib.request.Request(url=urls, headers=headers)
+    data=urllib.request.urlopen(req).read()
+    with open(outputfile, "wb") as code:
+        code.write(data)
+    df_tran = pd.read_csv(outputfile)
+    # num=-num
+    # df_new = df_tran.iloc[num:, :]
+    date = df_tran['Date(UTC)'].tolist()
+    timestamps = df_tran['UnixTimeStamp'].tolist()
+    value = df_tran['Value'].tolist()
+    return  date,timestamps,value
+def chart(request):
+    date1, time1, value1 = fetch_info("https://etherscan.io/chart/gaslimit?output=csv", "./gaslimit.csv")
+    date2, time2, value2 = fetch_info("https://etherscan.io/chart/gasused?output=csv", "./gasused.csv")
+    date3, time3, value3 = fetch_info("https://etherscan.io/chart/gasprice?output=csv", "./gasprice.csv")
+    date4, time4, value4 = fetch_info("https://etherscan.io/chart/blocktime?output=csv", "./blocktime.csv")
+    return render(request, 'chart.html', {"date1": date1, "time1": time1, "value1": value1,"date2":date2,"time2":time2,"value2":value2,"date3":date3,"time3":time3,"value3":value3,"date4":date4,"time4":time4,"value4":value4})
 

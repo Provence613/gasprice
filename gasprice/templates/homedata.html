@@ -282,19 +282,19 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 		$(document).ready(function () {
 		    var num={{ num }}
             var bheight=  {{ height }}
-            document.getElementById('heightLabel').innerHTML = bheight[9];
+            document.getElementById('heightLabel').innerHTML = bheight[0];
                 data1={};
         for (var i = 1; i < 11; i++) {
             data1[(11-i).toString()] = num[i - 1];
         }
             var low={{ lowprice }}
-            document.getElementById('lowPriceLabel').innerHTML = low[9];
+            document.getElementById('lowPriceLabel').innerHTML = low[0];
             data2={};
         for (var i = 1; i < 11; i++) {
                     data2[(11-i).toString()] = low[i - 1];
                 }
             var avg={{ aveprice }}
-            document.getElementById('avgPriceLabel').innerHTML = avg[9];
+            document.getElementById('avgPriceLabel').innerHTML = avg[0];
             data3={};
         for (var i = 1; i < 11; i++) {
                     data3[(11-i).toString()] = avg[i - 1];
