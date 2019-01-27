@@ -333,24 +333,24 @@ def gasapi(request):
     else:
         return JsonResponse({"status": "0", "message": "NOTOK", "result": "Invalid API URL endpoint, use api.gaspricing.io"})
 #Newly added information about chart data
-def fetch_info(urls,outputfile):
+def fetch_info(num,urls,outputfile):
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0;WOW64;rv:64.0) Gecko/20100101 Firefox/64.0'}
     req = urllib.request.Request(url=urls, headers=headers)
     data=urllib.request.urlopen(req).read()
     with open(outputfile, "wb") as code:
         code.write(data)
     df_tran = pd.read_csv(outputfile)
-    # num=-num
-    # df_new = df_tran.iloc[num:, :]
-    date = df_tran['Date(UTC)'].tolist()
-    timestamps = df_tran['UnixTimeStamp'].tolist()
-    value = df_tran['Value'].tolist()
+    num=-num
+    df_new = df_tran.iloc[num:, :]
+    date = df_new['Date(UTC)'].tolist()
+    timestamps = df_new['UnixTimeStamp'].tolist()
+    value = df_new['Value'].tolist()
     return  date,timestamps,value
 def chart(request):
-    date1, time1, value1 = fetch_info("https://etherscan.io/chart/gaslimit?output=csv", "./gaslimit.csv")
-    date2, time2, value2 = fetch_info("https://etherscan.io/chart/gasused?output=csv", "./gasused.csv")
-    date3, time3, value3 = fetch_info("https://etherscan.io/chart/gasprice?output=csv", "./gasprice.csv")
-    date4, time4, value4 = fetch_info("https://etherscan.io/chart/blocktime?output=csv", "./blocktime.csv")
+    date1, time1, value1 = fetch_info(100,"https://etherscan.io/chart/gaslimit?output=csv", "./gaslimit.csv")
+    date2, time2, value2 = fetch_info(100,"https://etherscan.io/chart/gasused?output=csv", "./gasused.csv")
+    date3, time3, value3 = fetch_info(100,"https://etherscan.io/chart/gasprice?output=csv", "./gasprice.csv")
+    date4, time4, value4 = fetch_info(100,"https://etherscan.io/chart/blocktime?output=csv", "./blocktime.csv")
     return render(request, 'chart.html', {"date1": date1, "time1": time1, "value1": value1,"date2":date2,"time2":time2,"value2":value2,"date3":date3,"time3":time3,"value3":value3,"date4":date4,"time4":time4,"value4":value4})
 def homedata(request):
     num2 = 5

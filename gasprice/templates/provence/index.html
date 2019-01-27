@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Realm - Dashboard</title>
+    <title>Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Bluth Company">
     <link rel="shortcut icon" href="assets/ico/favicon.html">
@@ -16,57 +16,49 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+<script src="../static/provence/assets/js/Chart.min.js"></script>
+<style>
+.copyrights {
+    padding: 1.5em 1em;
+    text-align: center;
+    box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.15);
+}
+.copyrights p {
+    font-size: 1em;
+    color: #000;
+}
+</style>
   </head>
   <body>
     <div id="wrap">
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <div class="logo"> 
-            <img src="../static/provence/assets/img/logo.png" alt="Realm Admin Template">
+          <div class="logo">
+            <span style="color:white;font-size:20pt">Gas Pricing</span>
           </div>
+		  <div class="search-box" style="float: right">
+									<form action="/eval/" method="post">
+										<input type="text" placeholder="Transaction num"  name="count">
+									</form>
+								</div>
            <a class="btn btn-navbar visible-phone" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-           <a class="btn btn-navbar slide_menu_left visible-tablet">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
 
-          <div class="top-menu visible-desktop">
-            <ul class="pull-left">
-              <li><a id="messages" data-notification="2" href="#"><i class="icon-envelope"></i> Messages</a></li>
-              <li><a id="notifications" data-notification="3" href="#"><i class="icon-globe"></i> Notifications</a></li>
-            </ul>
-            <ul class="pull-right">  
-              <li><a href="login.html"><i class="icon-off"></i> Logout</a></li>
-            </ul>
-          </div>
 
-          <div class="top-menu visible-phone visible-tablet">
-            <ul class="pull-right">  
-              <li><a title="link to View all Messages page, no popover in phone view or tablet" href="#"><i class="icon-envelope"></i></a></li>
-              <li><a title="link to View all Notifications page, no popover in phone view or tablet" href="#"><i class="icon-globe"></i></a></li>
-              <li><a href="login.html"><i class="icon-off"></i></a></li>
-            </ul>
-          </div>
+
 
         </div>
       </div>
     </div>
 
     <div class="container-fluid">
-     
+
       <!-- Side menu -->
       <div class="sidebar-nav nav-collapse collapse">
-        <div class="user_side clearfix">
-          <img src="../static/provence/assets/img/odinn.jpg" alt="Odinn god of Thunder">
-          <h5>Odinn</h5>
-          <a href="#"><i class="icon-cog"></i> Settings</a>        
-        </div>
         <div class="accordion" id="accordion2">
           <div class="accordion-group">
             <div class="accordion-heading">
@@ -84,8 +76,8 @@
             </div>
             <div id="collapse1" class="accordion-body collapse">
               <div class="accordion-inner">
-                <a class="accordion-toggle" href="/pforecast"><i class="icon-star"></i> Forecast</a>
-                <a class="accordion-toggle" href="/pbacktest"><i class="icon-list-alt"></i> Model Evaluate</a>
+                <a class="accordion-toggle" href="/pre"><i class="icon-star"></i> Forecast</a>
+                <a class="accordion-toggle" href="/eval"><i class="icon-list-alt"></i> Model Evaluate</a>
               </div>
             </div>
           </div>
@@ -100,203 +92,165 @@
               </div>
             </div>
           </div>
-          </div>      
+          </div>
         </div>
-      </div>
+
       <!-- /Side menu -->
 
       <!-- Main window -->
       <div class="main_container" id="dashboard_page">
+	  <br>
         <div class="row-fluid">
-          <div class="overview_boxes">
-            <div class="box_row clearfix">
-              <div class="widget-tasks-statistics">
-                <div class="userstats clearfix" style="margin-top: 25px;">
-                    <a href="javascript:void(0)" data-toggle="modal" data-target="#example_modal2">
-                    <div class="white">
-                      <i style="color:#E28271" class="icon-eye-open"></i>
-                      <p style="color:#E28271">+85%</p>
-                    </div>
-                    <div class="widget">
-                      <input class="knob" data-width="120" data-height="120" data-displayInput=false data-readOnly=true data-thickness=".15" value="85">   
-                    </div>
-                    <p><strong>+530</strong>Visits this month</p>
-                  </a>
-                </div>
-              </div>
-              <div class="widget-tasks-statistics">
-                <div class="userstats clearfix" style="margin-top: 25px;">
-                    <a href="javascript:void(0)" data-toggle="modal" data-target="#example_modal2">
-                    <div class="white">
-                      <i style="color:#98E5EA" class="icon-user"></i>
-                      <p style="color:#98E5EA">+13%</p>
-                    </div>
-                    <div class="widget">
-                      <input class="knob" data-width="120" data-height="120" data-displayInput=false data-readOnly=true data-thickness=".15" value="13">   
-                    </div>
-                    <p><strong>57</strong>New Users</p>
-
-                  </a>
-                </div>
-              </div>
-              <div class="widget-tasks-statistics">
-                <div class="userstats clearfix" style="margin-top: 25px;">
-                    <a href="javascript:void(0)" data-toggle="modal" data-target="#example_modal2">
-                    <div class="white">
-                      <i style="color:#AEEA98" class="icon-bullhorn"></i>
-                      <p style="color:#AEEA98">+15%</p>
-                    </div>
-                    <div class="widget">
-                      <input class="knob" data-width="120" data-height="120" data-displayInput=false data-readOnly=true data-thickness=".15" value="15">   
-                    </div>
-                    <p><strong>35/235</strong>Finished Tickets</p>
-                  </a>
-                </div>
-              </div>
-            </div> 
-            <div class="box_row clearfix">
-              <div class="widget-tasks-statistics">
-                <div class="userstats clearfix" style="margin-top: 25px;">
-                    <a href="javascript:void(0)" data-toggle="modal" data-target="#example_modal2">
-                    <div class="white">
-                      <i style="color:#98AEEA" class="icon-thumbs-up"></i>
-                      <p style="color:#98AEEA">+55%</p>
-                    </div>
-                    <div class="widget">
-                      <input class="knob" data-width="120" data-height="120" data-displayInput=false data-readOnly=true data-thickness=".15" value="55">   
-                    </div>
-                    <p><strong>$14,230</strong>Income</p>
-                  </a>
-                </div>
-              </div>
-              <div class="widget-tasks-statistics">
-                <div class="userstats clearfix" style="margin-top: 25px;">
-                    <a href="javascript:void(0)" data-toggle="modal" data-target="#example_modal2">
-                    <div class="white">
-                      <i style="color:#EA98AB" class="icon-credit-card"></i>
-                      <p style="color:#EA98AB">+35%</p>
-                    </div>
-                    <div class="widget">
-                      <input class="knob" data-width="120" data-height="120" data-displayInput=false data-readOnly=true data-thickness=".15" value="35">   
-                    </div>
-                    <p><strong>152</strong>New Likes</p>
-                  </a>
-                </div>
-              </div>
-              <div class="widget-tasks-statistics">
-                <div class="userstats clearfix" style="margin-top: 25px;">
-                    <a href="javascript:void(0)" data-toggle="modal" data-target="#example_modal2">
-                    <div class="white">
-                      <i style="color:#F6BF99" class="icon-phone"></i>
-                      <p style="color:#F6BF99">+97%</p>
-                    </div>
-                    <div class="widget">
-                      <input class="knob" data-width="120" data-height="120" data-displayInput=false data-readOnly=true data-thickness=".15" value="97">   
-                    </div>
-                    <p><strong>592</strong>Leads Generated</p>
-                  </a>
-                </div>
-              </div>
-            </div> 
+          <div class="widget span12" style="overflow:visible;">
+			 <a class="btn btn-box bubble bubble-danger span3 tips" data-title="bubble-danger" href="#" ><i class="icon-user"></i><span>{{ height.0 }}
+                        Last Block</span></a>
+                  <a class="btn btn-box span3" href="#"><i class="icon-plus-sign"></i><span>{{ lowprice.0 }}Low Gas Price (gWei)</span></a>
+                  <a class="btn btn-box span3" href="#"><i class="icon-calendar"></i><span>{{ aveprice.0 }}Avg Gas Price (gWei)</span></a>
+                  <a class="btn btn-box bubble bubble-info span3 tips" data-title="bubble-info" href="#" ><i class="icon-signal"></i><span>23Avg Duration(s)</span></a>
           </div>
         </div>
+
+
         <!-- CHARTS  -->
         <div class="row-fluid">
-          <div class="widget span4">
+          <div class="widget span6">
             <div class="widget-header">
               <i class="icon-bar-chart"></i>
-              <h5>Charts Overview</h5>
+              <h5>Txns in Last Blocks</h5>
               <div class="widget-buttons">
                   <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
               </div>
             </div>
             <div class="widget-body clearfix">
               <div class="widget-analytics-small">
-                <ul>
-                  <li>
-                    <span class="inlinesparkline">1,5,10,5,25,30,12,22</span>
-                    <h5>Visits:</h5>
-                    <h4>502</h4>
-                  </li>
-                  <li>
-                    <span class="inlinesparkline">5,4,5,7,8,1,1,20,2</span>
-                    <h5>Unique Visitors:</h5>
-                    <h4>420</h4>
-                  </li>
-                  <li>
-                    <span class="inlinesparkline">5,3,3,98,102,155,150,187,196</span>
-                    <h5>Pageviews:</h5>
-                    <h4>2054</h4>
-                  </li>
-                  <li>
-                    <span class="inlinesparkline">5,44,53,66,378,771,341,520,452</span>
-                    <h5>Pages / Visit:</h5>
-                    <h4>5.8</h4>
-                  </li>
-                  <li>
-                    <span class="inlinesparkline">5,4,35,57,28,16,11,20,72</span>
-                    <h5>Avg. Visit Duration:</h5>
-                    <h4>00:10:34</h4>
-                  </li>
-                  <li>
-                    <span class="inlinesparkline">52,44,65,27,86,14,16,40,22</span>
-                    <h5>Bounce Rate:</h5>
-                    <h4>30.30%</h4>
-                  </li>
-                  <li>
-                    <span class="inlinesparkline">5,6,7,9,10,20,25,22,21</span>
-                    <h5>% New Visits:</h5>
-                    <h4>29.35%</h4>
-                  </li>
-                </ul>
+               <canvas id="line" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
+                    <script>
+                        var lineChartData = {
+						labels : {{ height }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ num }}
+							}
+						]
+
+					};
+                       new Chart(document.getElementById("line").getContext("2d")).Line(lineChartData);
+
+                    </script>
               </div>
             </div> <!-- /widget body -->
           </div> <!-- /widget span12 -->
-          <div class="widget span8">
+          <div class="widget span6">
             <div class="widget-header">
               <i class="icon-credit-card"></i>
-              <h5>Txns in Last Blocks</h5>
+              <h5>Low Gas Price in Last Blocks</h5>
               <div class="widget-buttons">
-                  <button class="btn btn-info btn-small" type="button"><i class="icon-plus"></i> See more</button>
+                  <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
+              </div>
+            </div>
+			<div class="widget-body clearfix">
+              <div class="widget-analytics-small">
+           <canvas id="line0" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
+                    <script>
+                        var lineChartData = {
+						labels : {{ height }},
+						datasets : [
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{ lowprice }}
+							}
+						]
+
+					};
+                       new Chart(document.getElementById("line0").getContext("2d")).Line(lineChartData);
+
+                    </script>
+								</div>
+								</div>
+          </div>
+        </div> <!-- /row-fluid -->
+<div class="row-fluid">
+          <div class="widget span6">
+            <div class="widget-header">
+              <i class="icon-bar-chart"></i>
+              <h5>Avg Gas Price in Last Blocks</h5>
+              <div class="widget-buttons">
                   <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
               </div>
             </div>
             <div class="widget-body clearfix">
-              <div style="height:274px;" id="graph" class="widget-analytics-large"></div>
+              <div class="widget-analytics-small">
+                <canvas id="line1" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
+                    <script>
+                        var lineChartData = {
+						labels : {{ height }},
+						datasets : [
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{ aveprice }}
+							}
+						]
+
+					};
+                       new Chart(document.getElementById("line1").getContext("2d")).Line(lineChartData);
+
+                    </script>
+              </div>
+            </div> <!-- /widget body -->
+          </div> <!-- /widget span12 -->
+          <div class="widget span6">
+            <div class="widget-header">
+              <i class="icon-credit-card"></i>
+              <h5>Avg Duration in Last Blocks</h5>
+              <div class="widget-buttons">
+                  <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
+              </div>
             </div>
+			<div class="widget-body clearfix">
+              <div class="widget-analytics-small">
+           <canvas id="line2" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
+                    <script>
+                        var lineChartData = {
+						labels : {{ height }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ num }}
+							}
+						]
+
+					};
+                       new Chart(document.getElementById("line2").getContext("2d")).Line(lineChartData);
+
+                    </script>
+								</div>
+								</div>
           </div>
         </div> <!-- /row-fluid -->
-          <div class="row-fluid"><!-- row-fluid -->
-              <div class="widget span6">
-                <div class="widget-header">
-                  <i class="icon-credit-card"></i>
-                  <h5>Low Gas Price in Last Blocks</h5>
-                  <div class="widget-buttons">
-                      <button class="btn btn-info btn-small" type="button"><i class="icon-plus"></i> See more</button>
-                      <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
-                  </div>
-                </div>
-                <div class="widget-body clearfix">
-                  <div style="height:274px;" id="graph1" class="widget-analytics-large"></div>
-                </div>
-              </div>
-              <div class="widget span6">
-                <div class="widget-header">
-                  <i class="icon-credit-card"></i>
-                  <h5>Avg Gas Price in Last Blocks</h5>
-                  <div class="widget-buttons">
-                      <button class="btn btn-info btn-small" type="button"><i class="icon-plus"></i> See more</button>
-                      <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
-                  </div>
-                </div>
-                <div class="widget-body clearfix">
-                  <div style="height:274px;" id="graph2" class="widget-analytics-large"></div>
-                </div>
-              </div>
-          </div><!-- /row-fluid -->
+
+
+
+
+
+<div class="copyrights">
+	 <p>Copyright &copy; 2019 All rights reserved.</p>
+</div>
       </div>
       <!-- /Main window -->
-      
+
     </div><!--/.fluid-container-->
     </div><!-- wrap ends-->
 
@@ -314,7 +268,7 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
         <button class="btn btn-primary">Save changes</button>
       </div>
-    </div> 
+    </div>
 
     <!-- example modal -->
     <div id="example_modal2" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -329,7 +283,7 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
         <button class="btn btn-primary">Save changes</button>
       </div>
-    </div> 
+    </div>
 
 
 
@@ -341,7 +295,7 @@
       </div>
       <div class="modal-body">
         <div class="clearfix">
-          <img src="../static/provence/assets/img/avatars/11.jpg" class="img-circle" style="float: left; width: 65px; margin-right: 20px;">
+          <img src="assets/img/avatars/11.jpg" class="img-circle" style="float: left; width: 65px; margin-right: 20px;">
            <h3 style="margin:0">John</h3>
            <p class="muted">Marketing</p>
         </div>
@@ -356,7 +310,7 @@
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
       </div>
-    </div> 
+    </div>
 
 
 
