@@ -214,35 +214,37 @@ def pre(request):
         contime=time
     return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1})
 def home(request):
-    num2 = 10
+    num2 = 5
     if request.method == "POST":
         num2 = int(request.POST.get("num2", None))
     blockheight = get_recent_block()
     block_list = creat_block_list(blockheight, num2)
     id_list, num_list, lowprice_list, aveprice_list,maxprice_list = get_tran_Data(block_list)
-    return render(request, 'home.html',
-                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
+    return render(request, 'clara/index.html',
+                 {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
                    "aveprice": aveprice_list})
-    #return render(request,"home.html")
+    #return render(request,"clara/index.html")
 
 def homedata(request):
-    num2 = 10
+    num2 = 5
     if request.method == "POST":
         num2 = int(request.POST.get("num2", None))
     blockheight = get_recent_block()
     block_list = creat_block_list(blockheight, num2)
     id_list, num_list, lowprice_list, aveprice_list,maxprice_list = get_tran_Data(block_list)
-    return render(request, 'homedata.html',
+    return render(request, 'provence/index.html',
                   {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
                    "aveprice": aveprice_list})
 def about(request):
-    return render(request,"about.html")
+    return render(request,"clara/about.html")
 def forecast(request):
-    return render(request,"forecast.html")
+    return render(request,"clara/forecast.html")
 def backtest(request):
-    return render(request,"backtest.html")
+    return render(request,"clara/backtest.html")
 def contact(request):
-    return render(request,"contact.html")
+    return render(request,"clara/contact.html")
+def dataPage(request):
+    return render(request,"clara/data.html")
 def blockexplorer(request):
     num2 = 20
     infotype = request.GET.get("type", None)
@@ -350,4 +352,25 @@ def chart(request):
     date3, time3, value3 = fetch_info("https://etherscan.io/chart/gasprice?output=csv", "./gasprice.csv")
     date4, time4, value4 = fetch_info("https://etherscan.io/chart/blocktime?output=csv", "./blocktime.csv")
     return render(request, 'chart.html', {"date1": date1, "time1": time1, "value1": value1,"date2":date2,"time2":time2,"value2":value2,"date3":date3,"time3":time3,"value3":value3,"date4":date4,"time4":time4,"value4":value4})
-
+def homedata(request):
+    num2 = 5
+    if request.method == "POST":
+        num2 = int(request.POST.get("num2", None))
+    blockheight = get_recent_block()
+    block_list = creat_block_list(blockheight, num2)
+    id_list, num_list, lowprice_list, aveprice_list,maxprice_list = get_tran_Data(block_list)
+    return render(request, 'provence/index.html',
+                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
+                   "aveprice": aveprice_list})
+def phome(request):
+    return render(request,"provence/index.html")
+def pabout(request):
+    return render(request,"provence/about.html")
+def pforecast(request):
+    return render(request,"provence/forecast.html")
+def pbacktest(request):
+    return render(request,"provence/backtest.html")
+def pcontact(request):
+    return render(request,"provence/contact.html")
+def pdataPage(request):
+    return render(request,"provence/data.html")

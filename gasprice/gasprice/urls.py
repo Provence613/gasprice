@@ -24,6 +24,7 @@ urlpatterns = [
     path(r'datal/', views.datal),
     path(r'blockexplorerdata/',views.blockexplorerdata),
     path(r'data/',views.data),
+    path(r'dataPage/',views.dataPage),
     path(r'homedata/', views.homedata),
     path(r'eval/',views.eval),
     path(r'pre/',views.pre),
@@ -33,4 +34,10 @@ urlpatterns = [
     path(r'backtest/', views.backtest),
     path(r'contact/', views.contact),
     path(r'blockexplorer/', views.blockexplorer),
+    path(r'phome/', views.phome),
+    path(r'pabout/', views.pabout),
+    path(r'pforecast/', views.pforecast),
+    path(r'pbacktest/', views.pbacktest),
+    path(r'pcontact/', views.pcontact),
+    path(r'pdataPage/',views.pdataPage),
 ]
