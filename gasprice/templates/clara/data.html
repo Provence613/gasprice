@@ -228,134 +228,126 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <div class="inner-block">
     <div class="chart-main-block">
        <div class="chart-first-line">
-    	<div class="col-md-6 chart-blo-1">
-    	   <div class="dygno">
-    		     <h2>Data</h2>
-				
-				    <canvas id="doughnut" height="300" width="470" style="width: 470px; height: 300px;"></canvas>
-								<script>
-									var doughnutData = [
-									{
-										value: 30,
-										color:"#337AB7"
-									},
-									{
-										value : 50,
-										color : "#929292"
-									},
-									{
-										value : 100,
-										color : "#FC8213"
-									},
-									{
-										value : 40,
-										color : "#68AE00"
-									},
-									];
-									new Chart(document.getElementById("doughnut").getContext("2d")).Doughnut(doughnutData);
-								</script>
-			</div>	
-    	 </div>
-    	<div class="col-md-6 chart-blo-1">
+        <div class="col-md-12 chart-blo-1">
     	    <div class="line-chart">
-    		<h3>Line Chart</h3>
-    		 <canvas id="line" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+    		<h3>Gas Price in Last Period</h3>
+    		 <canvas id="line2" height="300" width="2000" style="width: 900px; height: 300px;"> </canvas>
                     <script>
                         var lineChartData = {
-						labels : ["","","","","","",""],
+						labels :['{{ date3.0 }}','{{ date3.1 }}','{{ date3.2 }}','{{ date3.3 }}','{{ date3.4 }}','{{ date3.5 }}','{{ date3.6 }}','{{ date3.7 }}','{{ date3.8 }}','{{ date3.9 }}',
+                 '{{ date3.10 }}','{{ date3.11 }}','{{ date3.12 }}','{{ date3.13 }}','{{ date3.14 }}','{{ date3.15 }}','{{ date3.16 }}','{{ date3.17 }}','{{ date3.18 }}','{{ date3.19 }}',
+                '{{ date3.20 }}','{{ date3.21 }}','{{ date3.22 }}','{{ date3.23 }}','{{ date3.24 }}','{{ date3.25 }}','{{ date3.26 }}','{{ date3.27 }}','{{ date3.28 }}','{{ date3.29 }}',
+                '{{ date3.30 }}','{{ date3.31 }}','{{ date3.32 }}','{{ date3.33 }}','{{ date3.34 }}','{{ date3.35 }}','{{ date3.36 }}','{{ date3.37 }}','{{ date3.38 }}','{{ date3.39 }}',
+                '{{ date3.40 }}','{{ date3.41 }}','{{ date3.42 }}','{{ date3.43 }}','{{ date3.44 }}','{{ date3.45 }}','{{ date3.46 }}','{{ date3.47 }}','{{ date3.48 }}','{{ date3.49 }}'
+            ],
 						datasets : [
-							{
-								fillColor : "rgba(252, 130, 19, 0.74)",
-								strokeColor : "#FC8213",
-								pointColor : "#FC8213",
-								pointStrokeColor : "#fff",
-								data : [65,59,90,81,56,55,40]
-							},
 							{
 								fillColor : "rgba(51, 122, 183, 0.71)",
 								strokeColor : "#337AB7",
 								pointColor : "#337AB7",
 								pointStrokeColor : "#fff",
-								data : [28,48,40,19,96,27,100]
+								data : {{ value3 }}
+							}
+						]
+
+					};
+                       new Chart(document.getElementById("line2").getContext("2d")).Line(lineChartData);
+
+                    </script>
+    	    </div>
+    	  </div>
+    	<div class="col-md-12 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Gas Limit in Last Period</h3>
+    		 <canvas id="line0" height="300" width="2000" style="width: 900px; height: 300px;"> </canvas>
+                    <script>
+                        var lineChartData = {
+						labels :['{{ date1.0 }}','{{ date1.1 }}','{{ date1.2 }}','{{ date1.3 }}','{{ date1.4 }}','{{ date1.5 }}','{{ date1.6 }}','{{ date1.7 }}','{{ date1.8 }}','{{ date1.9 }}',
+                       '{{ date1.10 }}','{{ date1.11 }}','{{ date1.12 }}','{{ date1.13 }}','{{ date1.14 }}','{{ date1.15 }}','{{ date1.16 }}','{{ date1.17 }}','{{ date1.18 }}','{{ date1.19 }}',
+                      '{{ date1.20 }}','{{ date1.21 }}','{{ date1.22 }}','{{ date1.23 }}','{{ date1.24 }}','{{ date1.25 }}','{{ date1.26 }}','{{ date1.27 }}','{{ date1.28 }}','{{ date1.29 }}',
+                      '{{ date1.30 }}','{{ date1.31 }}','{{ date1.32 }}','{{ date1.33 }}','{{ date1.34 }}','{{ date1.35 }}','{{ date1.36 }}','{{ date1.37 }}','{{ date1.38 }}','{{ date1.39 }}',
+                      '{{ date1.40 }}','{{ date1.41 }}','{{ date1.42 }}','{{ date1.43 }}','{{ date1.44 }}','{{ date1.45 }}','{{ date1.46 }}','{{ date1.47 }}','{{ date1.48 }}','{{ date1.49 }}'
+                  ],
+						datasets : [
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{ value1 }}
 							}
 						]
 						
 					};
-                       new Chart(document.getElementById("line").getContext("2d")).Line(lineChartData);
+                       new Chart(document.getElementById("line0").getContext("2d")).Line(lineChartData);
+
+                    </script>
+    	    </div>
+    	  </div>
+        <div class="col-md-12 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Gas Used in Last Period</h3>
+    		 <canvas id="line1" height="300" width="2000" style="width: 900px; height: 300px;"> </canvas>
+                    <script>
+                        var lineChartData = {
+						labels :['{{ date2.0 }}','{{ date2.1 }}','{{ date2.2 }}','{{ date2.3 }}','{{ date2.4 }}','{{ date2.5 }}','{{ date2.6 }}','{{ date2.7 }}','{{ date2.8 }}','{{ date2.9 }}',
+                 '{{ date2.10 }}','{{ date2.11 }}','{{ date2.12 }}','{{ date2.13 }}','{{ date2.14 }}','{{ date2.15 }}','{{ date2.16 }}','{{ date2.17 }}','{{ date2.18 }}','{{ date2.19 }}',
+                '{{ date2.20 }}','{{ date2.21 }}','{{ date2.22 }}','{{ date2.23 }}','{{ date2.24 }}','{{ date2.25 }}','{{ date2.26 }}','{{ date2.27 }}','{{ date2.28 }}','{{ date2.29 }}',
+                '{{ date2.30 }}','{{ date2.31 }}','{{ date2.32 }}','{{ date2.33 }}','{{ date2.34 }}','{{ date2.35 }}','{{ date2.36 }}','{{ date2.37 }}','{{ date2.38 }}','{{ date2.39 }}',
+                '{{ date2.40 }}','{{ date2.41 }}','{{ date2.42 }}','{{ date2.43 }}','{{ date2.44 }}','{{ date2.45 }}','{{ date2.46 }}','{{ date2.47 }}','{{ date2.48 }}','{{ date2.49 }}'
+            ],
+						datasets : [
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{ value2 }}
+							}
+						]
+
+					};
+                       new Chart(document.getElementById("line1").getContext("2d")).Line(lineChartData);
+
+                    </script>
+    	    </div>
+    	  </div>
+        <div class="col-md-12 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Block Generate Time in Last Blocks</h3>
+    		 <canvas id="line3" height="300" width="2000" style="width: 900px; height: 300px;"> </canvas>
+                    <script>
+                        var lineChartData = {
+						labels :['{{ date4.0 }}','{{ date4.1 }}','{{ date4.2 }}','{{ date4.3 }}','{{ date4.4 }}','{{ date4.5 }}','{{ date4.6 }}','{{ date4.7 }}','{{ date4.8 }}','{{ date4.9 }}',
+                 '{{ date4.10 }}','{{ date4.11 }}','{{ date4.12 }}','{{ date4.13 }}','{{ date4.14 }}','{{ date4.15 }}','{{ date4.16 }}','{{ date4.17 }}','{{ date4.18 }}','{{ date4.19 }}',
+                '{{ date4.20 }}','{{ date4.21 }}','{{ date4.22 }}','{{ date4.23 }}','{{ date4.24 }}','{{ date4.25 }}','{{ date4.26 }}','{{ date4.27 }}','{{ date4.28 }}','{{ date4.29 }}',
+                '{{ date4.30 }}','{{ date4.31 }}','{{ date4.32 }}','{{ date4.33 }}','{{ date4.34 }}','{{ date4.35 }}','{{ date4.36 }}','{{ date4.37 }}','{{ date4.38 }}','{{ date4.39 }}',
+                '{{ date4.40 }}','{{ date4.41 }}','{{ date4.42 }}','{{ date4.43 }}','{{ date4.44 }}','{{ date4.45 }}','{{ date4.46 }}','{{ date4.47 }}','{{ date4.48 }}','{{ date4.49 }}'
+            ],
+						datasets : [
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{ value4 }}
+							}
+						]
+
+					};
+                       new Chart(document.getElementById("line3").getContext("2d")).Line(lineChartData);
 
                     </script>
     	    </div>
     	  </div>
     	  <div class="clearfix"> </div>
     	</div>
-    	<div class="chart-second-line">
-    	<div class="col-md-6 chart-blo-1">
-    	    <div class="polararea">
-    		<h3>Polar Chart</h3>
-    		<canvas id="polarArea" height="300" width="300" style="width: 300px; height: 300px;"></canvas>
-				<script>
-					var chartData = [
-						{
-							value : Math.random(),
-							color: "#FC8213"
-						},
-						{
-							value : Math.random(),
-							color: "#68AE00"
-						},
-						{
-							value : Math.random(),
-							color: "#337AB7"
-						},
-						{
-							value : Math.random(),
-							color: "#FC8213"
-						},
-						{
-							value : Math.random(),
-							color: "#68AE00"
-						},
-						{
-							value : Math.random(),
-							color: "#337AB7"
-						}
-					];
-					new Chart(document.getElementById("polarArea").getContext("2d")).PolarArea(chartData);
-				</script>   
-			</div> 		
-    	  </div>   	
-    	<div class="col-md-6 chart-blo-1">
-    		<div class="chart-other">
-	    		<h3>Pie</h3> 		
-				<canvas id="pie" height="315" width="470" style="width: 470px; height: 315px;"></canvas>
-								<script>
-									var pieData = [
-										{
-											value: 30,
-											color:"#337AB7"
-										},
-										{
-											value : 50,
-											color : "#FC8213"
-										},
-										{
-											value : 100,
-											color : "#8BC34A"
-										}
-									
-									];
-									new Chart(document.getElementById("pie").getContext("2d")).Pie(pieData);
-								</script>
-            </div>
-    	</div>
-    	<div class="clearfix"> </div>
-    	</div>
     </div>
 </div>
 <!--inner block end here-->
 <!--copy rights start here-->
 <div class="copyrights">
-	 <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+	 <p>Copyright &copy; 2019 LEE</p>
 </div>	
 <!--COPY rights end here-->
 </div>

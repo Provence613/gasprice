@@ -6,7 +6,6 @@ html, body{
   font-family: 'Work Sans', sans-serif;
    font-size: 100%;
    background:#fff;
-    height:100%;
 }
 a {
   text-decoration: none;
@@ -3168,7 +3167,7 @@ canvas#bar {
     font-size: 0.9em;
 }
 canvas#line {
-    width: 410px !important;
+   /* width: 410px !important;*/
 }
 span.malorum-pro {
     left: 190px;

@@ -244,7 +244,14 @@ def backtest(request):
 def contact(request):
     return render(request,"clara/contact.html")
 def dataPage(request):
-    return render(request,"clara/data.html")
+    date1, time1, value1 = fetch_info(50, "https://etherscan.io/chart/gaslimit?output=csv", "./gaslimit.csv")
+    date2, time2, value2 = fetch_info(50, "https://etherscan.io/chart/gasused?output=csv", "./gasused.csv")
+    date3, time3, value3 = fetch_info(50, "https://etherscan.io/chart/gasprice?output=csv", "./gasprice.csv")
+    date4, time4, value4 = fetch_info(50, "https://etherscan.io/chart/blocktime?output=csv", "./blocktime.csv")
+    return render(request, 'clara/data.html',
+                  {"date1": date1, "time1": time1, "value1": value1, "date2": date2, "time2": time2, "value2": value2,
+                   "date3": date3, "time3": time3, "value3": value3, "date4": date4, "time4": time4, "value4": value4})
+    #return render(request,"clara/data.html")
 def blockexplorer(request):
     num2 = 20
     infotype = request.GET.get("type", None)
@@ -342,7 +349,7 @@ def fetch_info(num,urls,outputfile):
     df_tran = pd.read_csv(outputfile)
     num=-num
     df_new = df_tran.iloc[num:, :]
-    date = df_new['Date(UTC)'].tolist()
+    date = df_new["Date(UTC)"].tolist()
     timestamps = df_new['UnixTimeStamp'].tolist()
     value = df_new['Value'].tolist()
     return  date,timestamps,value
