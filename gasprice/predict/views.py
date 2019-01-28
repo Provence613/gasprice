@@ -17,6 +17,7 @@ import pandas as pd
 import numpy as np
 import os
 from etherscan.proxies import Proxies
+from etherscan.stats import Stats
 import  urllib
 from urllib.request import urlretrieve
 # 全局变量
@@ -118,6 +119,10 @@ def get_pre_Data(block_list):
         # height_list.append(blockheight)
         # print(int(block['transactions'][1]['gasPrice'],16))
     return lowprice_list,aveprice_list,maxprice_list,timestamp_list
+def getrate():
+    api1 = Stats(api_key=key)
+    last_price = api1.get_ether_last_price()
+    return last_price['ethusd']
 def eval(request):
     if request.session.get('is_login') == '1':
         uname = request.session['username']
@@ -156,8 +161,9 @@ def eval(request):
         count_list.append(trancount)
     return render(request,'eval.html',{"data": data1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"uname":uname,"label1":label_list,"List4":count_list})
 def process_data():
-    cols = ['difficulty', 'gaslimit', 'gasused', 'gaspricel1','confirmtime','timespan1']
-    data_df = pd.read_csv("./transaction2.csv")
+    # cols = ['difficulty', 'gaslimit', 'gasused', 'gaspricel1','confirmtime','timespan1']
+    cols = ['difficulty', 'gaslimit', 'rate', 'gaspricel1', 'confirmtime']
+    data_df = pd.read_csv("./tran_data.csv")
     # cols=['difficulty','gaspricel1','gaspricel2']
     X=data_df[cols]
     y=data_df['gasprice']
@@ -174,7 +180,7 @@ def process_data():
 
 def predict_data(test):
     X_train, X_test, y_train, y_test=process_data()
-    model = xgb.XGBRegressor(learning_rate=0.2, n_estimators=550, max_depth=3,min_child_weight=5)
+    model = xgb.XGBRegressor(learning_rate=0.01, n_estimators=550, max_depth=7,min_child_weight=1)
     model.fit(X_train, y_train)
     y_pred = model.predict(test)
     return (y_pred[0])
@@ -204,7 +210,8 @@ def pre(request):
         time=int(request.POST.get("confirmtime",None))
         gaslimit=int(request.POST.get("gaslimit",None))
         gasused=rate*gaslimit/100
-        test = np.array([[difficulty, gaslimit, gasused, gaspricel1,time,timespan1]])
+        ethusd=getrate()
+        test = np.array([[difficulty, gaslimit,ethusd, gaspricel1,time]])
         price=predict_data(test)
         price=round(price,2)
         if price> std:
@@ -329,8 +336,9 @@ def gasapi(request):
         gaslimitl1 = int(block['gasLimit'], 16)
         gasusedl1 = int(block['gasUsed'], 16)
         rate = round((gasusedl1 / gaslimitl1) * 100, 2)
+        ethusd=getrate()
         gasused = rate * gaslimit / 100
-        test = np.array([[difficulty, gaslimit, gasused, gaspricel1, time, timespan1]])
+        test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, time]])
         gasprice = predict_data(test)
         gasprice = str(round(gasprice, 2))
         return JsonResponse({'gasprice': gasprice, 'confirmtime': time, 'gaslimit': gaslimit, 'message': "predict gasprice"})
@@ -380,4 +388,10 @@ def pbacktest(request):
 def pcontact(request):
     return render(request,"provence/contact.html")
 def pdataPage(request):
-    return render(request,"provence/data.html")
+    date1, time1, value1 = fetch_info(50, "https://etherscan.io/chart/gaslimit?output=csv", "./gaslimit.csv")
+    date2, time2, value2 = fetch_info(50, "https://etherscan.io/chart/gasused?output=csv", "./gasused.csv")
+    date3, time3, value3 = fetch_info(50, "https://etherscan.io/chart/gasprice?output=csv", "./gasprice.csv")
+    date4, time4, value4 = fetch_info(50, "https://etherscan.io/chart/blocktime?output=csv", "./blocktime.csv")
+    return render(request, 'provence/data.html',
+                  {"date1": date1, "time1": time1, "value1": value1, "date2": date2, "time2": time2, "value2": value2,
+                   "date3": date3, "time3": time3, "value3": value3, "date4": date4, "time4": time4, "value4": value4})

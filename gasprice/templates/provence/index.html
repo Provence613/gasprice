@@ -1,129 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Home</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Bluth Company">
-    <link rel="shortcut icon" href="assets/ico/favicon.html">
-    <link href="../static/provence/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="../static/provence/assets/css/theme.css" rel="stylesheet">
-    <link href="../static/provence/assets/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../static/provence/assets/css/alertify.css" rel="stylesheet">
-    <link href="http://fonts.useso.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
-    <link rel="Favicon Icon" href="favicon.ico">
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-<script src="../static/provence/assets/js/Chart.min.js"></script>
-<style>
-.copyrights {
-    padding: 1.5em 1em;
-    text-align: center;
-    box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.15);
-}
-.copyrights p {
-    font-size: 1em;
-    color: #000;
-}
-</style>
-  </head>
-  <body>
-    <div id="wrap">
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <div class="logo">
-            <span style="color:white;font-size:20pt">Gas Pricing</span>
-          </div>
-		  <div class="search-box" style="float: right">
-									<form action="/eval/" method="post">
-										<input type="text" placeholder="Transaction num"  name="count">
-									</form>
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Model Evaluation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<link href="../static/new/css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
+<!-- Custom Theme files -->
+<link href="../static/new/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<!--js-->
+<script src="../static/new/js/jquery-2.1.1.min.js"></script>
+<!--icons-css-->
+<link href="../static/new/css/font-awesome.css" rel="stylesheet">
+<!--Google Fonts-->
+<link href='https://fonts.googleapis.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Work+Sans:400,500,600' rel='stylesheet' type='text/css'>
+<!--static chart-->
+<script src="../static/new/js/Chart.min.js"></script>
+<!--//charts-->
+</head>
+<body>
+<div class="page-container">
+   <div class="left-content">
+	   <div class="mother-grid-inner">
+            <!--header start here-->
+				<div class="header-main">
+					<div class="header-left">
+							<div class="logo-name">
+									 <a href="/homedata"> <h1>GasPricng</h1>
+									<!--<img id="logo" src="" alt="Logo"/>-->
+								  </a>
+							</div>
+							<!--search-box-->
+								<!--//end-search-box-->
+							<div class="clearfix"> </div>
+						 </div>
+						 <div class="header-right">
+							<script src="../static/js/search.js"></script>
+							<div class="search-box">
+
+										<input onkeyup="searchInfo()" placeholder="Search..." type="search" id="input-info">
+
 								</div>
-           <a class="btn btn-navbar visible-phone" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
+							<!--notification menu end -->
 
+							<div class="clearfix"> </div>
+						</div>
+				     <div class="clearfix"> </div>
+				</div>
+<!--heder end here-->
+<!-- script-for sticky-nav -->
+		<script>
+		$(document).ready(function() {
+			 var navoffeset=$(".header-main").offset().top;
+			 $(window).scroll(function(){
+				var scrollpos=$(window).scrollTop();
+				if(scrollpos >=navoffeset){
+					$(".header-main").addClass("fixed");
+				}else{
+					$(".header-main").removeClass("fixed");
+				}
+			 });
 
-
-
-        </div>
-      </div>
-    </div>
-
-    <div class="container-fluid">
-
-      <!-- Side menu -->
-      <div class="sidebar-nav nav-collapse collapse">
-        <div class="accordion" id="accordion2">
-          <div class="accordion-group">
-            <div class="accordion-heading">
-              <a class="accordion-toggle active b_F79999" href="/phome"><i class="icon-dashboard"></i> <span>Home</span></a>
-            </div>
-          </div>
-          <div class="accordion-group">
-            <div class="accordion-heading">
-              <a class="accordion-toggle b_C1F8A9" href="/pdataPage"><i class="icon-bar-chart"></i> <span>Data</span></a>
-            </div>
-          </div>
-          <div class="accordion-group">
-            <div class="accordion-heading">
-              <a class="accordion-toggle b_C3F7A7 collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse1"><i class="icon-magic"></i> <span>Estimate</span></a>
-            </div>
-            <div id="collapse1" class="accordion-body collapse">
-              <div class="accordion-inner">
-                <a class="accordion-toggle" href="/pre"><i class="icon-star"></i> Forecast</a>
-                <a class="accordion-toggle" href="/eval"><i class="icon-list-alt"></i> Model Evaluate</a>
-              </div>
-            </div>
-          </div>
-          <div class="accordion-group">
-            <div class="accordion-heading">
-              <a class="accordion-toggle b_9FDDF6 collapsed" data-toggle="collapse" data-parent="#accordion2" href="#collapse2"><i class="icon-reorder"></i> <span>Contact</span></a>
-            </div>
-            <div id="collapse2" class="accordion-body collapse">
-              <div class="accordion-inner">
-                <a class="accordion-toggle" href="/pcontact"><i class="icon-rss"></i> Contact Us</a>
-                <a class="accordion-toggle" href="/pabout"><i class="icon-calendar"></i> About Us</a>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-
-      <!-- /Side menu -->
-
-      <!-- Main window -->
-      <div class="main_container" id="dashboard_page">
-	  <br>
-        <div class="row-fluid">
-          <div class="widget span12" style="overflow:visible;">
-			 <a class="btn btn-box bubble bubble-danger span3 tips" data-title="bubble-danger" href="#" ><i class="icon-user"></i><span>{{ height.0 }}
-                        Last Block</span></a>
-                  <a class="btn btn-box span3" href="#"><i class="icon-plus-sign"></i><span>{{ lowprice.0 }}Low Gas Price (gWei)</span></a>
-                  <a class="btn btn-box span3" href="#"><i class="icon-calendar"></i><span>{{ aveprice.0 }}Avg Gas Price (gWei)</span></a>
-                  <a class="btn btn-box bubble bubble-info span3 tips" data-title="bubble-info" href="#" ><i class="icon-signal"></i><span>23Avg Duration(s)</span></a>
-          </div>
-        </div>
-
-
-        <!-- CHARTS  -->
-        <div class="row-fluid">
-          <div class="widget span6">
-            <div class="widget-header">
-              <i class="icon-bar-chart"></i>
-              <h5>Txns in Last Blocks</h5>
-              <div class="widget-buttons">
-                  <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
-              </div>
-            </div>
-            <div class="widget-body clearfix">
-              <div class="widget-analytics-small">
-               <canvas id="line" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
+		});
+		</script>
+		<!-- /script-for sticky-nav -->
+<!--inner block start here-->
+<div class="inner-block">
+	<!--market updates updates-->
+	 <div class="market-updates">
+			<div class="col-md-3 market-update-gd">
+				<div class="market-update-block clr-block-1">
+					<div class="col-md-8 market-update-left">
+						<h3>{{ height.0 }}</h3><br>
+                        <h4>Last Block</h4>
+					</div>
+				  <div class="clearfix"> </div>
+				</div>
+			</div>
+			<div class="col-md-3 market-update-gd">
+				<div class="market-update-block clr-block-2">
+				 <div class="col-md-8 market-update-left">
+					<h3>{{ lowprice.0 }}</h3>
+					<h4>Low Gas Price (gWei)</h4>
+				  </div>
+				  <div class="clearfix"> </div>
+				</div>
+			</div>
+			<div class="col-md-3 market-update-gd">
+				<div class="market-update-block clr-block-3">
+					<div class="col-md-8 market-update-left">
+						<h3>{{ aveprice.0 }}</h3>
+						<h4>Avg Gas Price (gWei)</h4>
+					</div>
+				  <div class="clearfix"> </div>
+				</div>
+			</div>
+             <div class="col-md-3 market-update-gd">
+                    <div class="market-update-block clr-block-1">
+                        <div class="col-md-8 market-update-left">
+                            <h3>23</h3>
+                            <h4>Avg Duration(s)</h4>
+                        </div>
+                      <div class="clearfix"> </div>
+                    </div>
+                </div>
+		   <div class="clearfix"> </div>
+		</div>
+    <br>
+<!--market updates end here-->
+    <div class="chart-main-block">
+       <div class="chart-first-line">
+      <div class="col-md-6 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Txns in Last Blocks</h3>
+    		 <canvas id="line" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
                     <script>
                         var lineChartData = {
 						labels : {{ height }},
@@ -141,20 +134,12 @@
                        new Chart(document.getElementById("line").getContext("2d")).Line(lineChartData);
 
                     </script>
-              </div>
-            </div> <!-- /widget body -->
-          </div> <!-- /widget span12 -->
-          <div class="widget span6">
-            <div class="widget-header">
-              <i class="icon-credit-card"></i>
-              <h5>Low Gas Price in Last Blocks</h5>
-              <div class="widget-buttons">
-                  <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
-              </div>
-            </div>
-			<div class="widget-body clearfix">
-              <div class="widget-analytics-small">
-           <canvas id="line0" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
+    	    </div>
+    	  </div>
+   <div class="col-md-6 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Low Gas Price in Last Blocks</h3>
+    		 <canvas id="line0" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
                     <script>
                         var lineChartData = {
 						labels : {{ height }},
@@ -172,22 +157,15 @@
                        new Chart(document.getElementById("line0").getContext("2d")).Line(lineChartData);
 
                     </script>
-								</div>
-								</div>
-          </div>
-        </div> <!-- /row-fluid -->
-<div class="row-fluid">
-          <div class="widget span6">
-            <div class="widget-header">
-              <i class="icon-bar-chart"></i>
-              <h5>Avg Gas Price in Last Blocks</h5>
-              <div class="widget-buttons">
-                  <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
-              </div>
-            </div>
-            <div class="widget-body clearfix">
-              <div class="widget-analytics-small">
-                <canvas id="line1" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
+    	    </div>
+    	  </div>
+    	  <div class="clearfix"> </div>
+    	</div>
+    	<div class="chart-second-line">
+    	    <div class="col-md-6 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Avg Gas Price in Last Blocks</h3>
+    		 <canvas id="line1" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
                     <script>
                         var lineChartData = {
 						labels : {{ height }},
@@ -205,20 +183,12 @@
                        new Chart(document.getElementById("line1").getContext("2d")).Line(lineChartData);
 
                     </script>
-              </div>
-            </div> <!-- /widget body -->
-          </div> <!-- /widget span12 -->
-          <div class="widget span6">
-            <div class="widget-header">
-              <i class="icon-credit-card"></i>
-              <h5>Avg Duration in Last Blocks</h5>
-              <div class="widget-buttons">
-                  <a href="javascript:void(0)" class="collapse" data-collapsed="false"><i data-title="Collapse" class="icon-chevron-up"></i></a>
-              </div>
-            </div>
-			<div class="widget-body clearfix">
-              <div class="widget-analytics-small">
-           <canvas id="line2" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
+    	    </div>
+    	  </div>
+          <div class="col-md-6 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Avg Duration in Last Blocks</h3>
+    		 <canvas id="line2" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
                     <script>
                         var lineChartData = {
 						labels : {{ height }},
@@ -236,99 +206,72 @@
                        new Chart(document.getElementById("line2").getContext("2d")).Line(lineChartData);
 
                     </script>
-								</div>
-								</div>
-          </div>
-        </div> <!-- /row-fluid -->
+    	    </div>
+    	  </div>
+    	<div class="clearfix"> </div>
 
-
-
-
-
+    	</div>
+    </div>
+</div>
+<!--inner block end here-->
+<!--copy rights start here-->
 <div class="copyrights">
 	 <p>Copyright &copy; 2019 All rights reserved.</p>
 </div>
-      </div>
-      <!-- /Main window -->
+<!--COPY rights end here-->
+</div>
+</div>
+<!--slider menu-->
+    <div class="sidebar-menu" style="background: #336699;">
+		  	<div class="logo"> <a href="#" class="sidebar-icon"> <span class="fa fa-bars"></span> </a> <a href="#"> <span id="logo" ></span>
+			      <!--<img id="logo" src="" alt="Logo"/>-->
+			  </a> </div>
+		    <div class="menu">
+		      <ul id="menu" >
+			   <li id="menu-home" ><a href="/homedata"><i class="fa fa-home"></i><span>Home</span></a></li>
+			   <li><a href="/pdataPage"><i class="fa fa-bar-chart"></i><span>Data</span></a></li>
+		        <li><a href="#"><i class="fa fa-cogs"></i><span>Estimate</span><span class="fa fa-angle-right" style="float: right"></span></a>
+		          <ul>
+		            <li><a href="/pre">Forecast</a></li>
+		            <li><a href="/eval">Model Evaluation</a></li>
+		          </ul>
+		        </li>
+                  <li><a href="#"><i class="fa fa-envelope"></i><span>Contact</span><span class="fa fa-angle-right" style="float: right"></span></a>
+		        	 <ul id="menu-academico-sub" >
+			            <li id="menu-academico-avaliacoes" ><a href="/pcontact">Contact Us</a></li>
+			            <li id="menu-academico-boletim" ><a href="/pabout">About Us</a></li>
+		             </ul>
+		        </li>
+		      </ul>
+		    </div>
+	 </div>
+	<div class="clearfix"> </div>
+</div>
+<!--slide bar menu end here-->
+<script>
+var toggle = true;
 
-    </div><!--/.fluid-container-->
-    </div><!-- wrap ends-->
-
-
-    <!-- example modal -->
-    <div id="example_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Support Ticket</h3>
-      </div>
-      <div class="modal-body">
-        <p>Here you can view and manage this support ticket.</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-
-    <!-- example modal -->
-    <div id="example_modal2" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Example Modal</h3>
-      </div>
-      <div class="modal-body">
-        <p>Here you can write more information about the object you clicked</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-        <button class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-
-
-
-    <!-- task_modal modal -->
-    <div id="task_modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Task info example</h3>
-      </div>
-      <div class="modal-body">
-        <div class="clearfix">
-          <img src="assets/img/avatars/11.jpg" class="img-circle" style="float: left; width: 65px; margin-right: 20px;">
-           <h3 style="margin:0">John</h3>
-           <p class="muted">Marketing</p>
-        </div>
-        <hr>
-        <h5>Task</h5>
-        <p>Create a marketing plan for the new campaign</p>
-        <h5>status&nbsp;&nbsp;<small>60%</small></h5>
-        <div class="progress">
-          <div class="bar" style="width: 60%;"></div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      </div>
-    </div>
-
-
-
-    <script type="text/javascript" src="../static/provence/assets/js/jquery.min.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/raphael-min.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/bootstrap.js"></script>
-    <script type="text/javascript" src='../static/provence/assets/js/sparkline.js'></script>
-    <script type="text/javascript" src='../static/provence/assets/js/morris.min.js'></script>
-    <script type="text/javascript" src="../static/provence/assets/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/jquery.masonry.min.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/jquery.imagesloaded.min.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/jquery.facybox.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/jquery.alertify.min.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/jquery.knob.js"></script>
-    <script type='text/javascript' src='../static/provence/assets/js/fullcalendar.min.js'></script>
-    <script type='text/javascript' src='../static/provence/assets/js/jquery.gritter.min.js'></script>
-    <script type="text/javascript" src="../static/provence/assets/js/realm.js"></script>
-    <script type="text/javascript" src="../static/provence/assets/js/jquery.slimscroll.min.js"></script>
-  </body>
+$(".sidebar-icon").click(function() {
+  if (toggle)
+  {
+    $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
+    $("#menu span").css({"position":"absolute"});
+  }
+  else
+  {
+    $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
+    setTimeout(function() {
+      $("#menu span").css({"position":"relative"});
+    }, 400);
+  }
+                toggle = !toggle;
+            });
+</script>
+<!--scrolling js-->
+		<script src="../static/new/js/jquery.nicescroll.js"></script>
+		<script src="../static/new/js/scripts.js"></script>
+		<!--//scrolling js-->
+<script src="../static/new/js/bootstrap.js"> </script>
+<!-- mother grid end here-->
+</body>
 </html>
