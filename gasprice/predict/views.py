@@ -12,6 +12,9 @@ from django.http import HttpResponseRedirect
 from django.db import connection
 import json
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor,BaggingRegressor
+from sklearn import tree
 import xgboost as xgb
 import pandas as pd
 import numpy as np
@@ -20,6 +23,7 @@ from etherscan.proxies import Proxies
 from etherscan.stats import Stats
 import  urllib
 from urllib.request import urlretrieve
+from keras.models import load_model
 # 全局变量
 with open('./api_key.json', mode='r') as key_file:
     key = json.loads(key_file.read())['key']
@@ -152,7 +156,7 @@ def eval(request):
         real_list.append(real)
         pred_list.append(pred)
         error_list.append(error)
-    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres group by i_p;")
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=1 group by i_p;")
     results1 = cursor.fetchall()
     label_list = ['<1', '1<5', '5<10', '10<15', '>15']
     count_list=[]
@@ -160,6 +164,52 @@ def eval(request):
         trancount = row[1]
         count_list.append(trancount)
     return render(request,'eval.html',{"data": data1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"uname":uname,"label1":label_list,"List4":count_list})
+def modeleval(request):
+    cursor = connection.cursor()
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=1 group by i_p;")
+    results1 = cursor.fetchall()
+    label_list = ['<1', '1<5', '5<10', '10<15', '>15']
+    count_list=[]
+    for row in results1:
+        trancount = row[1]
+        count_list.append(trancount)
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=2 group by i_p;")
+    results2 = cursor.fetchall()
+    count_list2 = []
+    for row in results2:
+        trancount = row[1]
+        count_list2.append(trancount)
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=3 group by i_p;")
+    results3 = cursor.fetchall()
+    count_list3 = []
+    for row in results3:
+        trancount = row[1]
+        count_list3.append(trancount)
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=4 group by i_p;")
+    results4 = cursor.fetchall()
+    count_list4 = []
+    for row in results4:
+        trancount = row[1]
+        count_list4.append(trancount)
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=5 group by i_p;")
+    results5 = cursor.fetchall()
+    count_list5 = []
+    for row in results5:
+        trancount = row[1]
+        count_list5.append(trancount)
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=6 group by i_p;")
+    results6 = cursor.fetchall()
+    count_list6 = []
+    for row in results6:
+        trancount = row[1]
+        count_list6.append(trancount)
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=7 group by i_p;")
+    results7 = cursor.fetchall()
+    count_list7 = []
+    for row in results7:
+        trancount = row[1]
+        count_list7.append(trancount)
+    return render(request,'modeleval.html',{"label1":label_list,"List1":count_list,"List2":count_list2,"List3":count_list3,"List4":count_list4,"List5":count_list5,"List6":count_list6,"List7":count_list7})
 def process_data():
     # cols = ['difficulty', 'gaslimit', 'gasused', 'gaspricel1','confirmtime','timespan1']
     cols = ['difficulty', 'gaslimit', 'rate', 'gaspricel1', 'confirmtime']
@@ -178,11 +228,42 @@ def process_data():
 
 
 
-def predict_data(test):
+def predict_data(test,type):
     X_train, X_test, y_train, y_test=process_data()
-    model = xgb.XGBRegressor(learning_rate=0.01, n_estimators=550, max_depth=7,min_child_weight=1)
-    model.fit(X_train, y_train)
-    y_pred = model.predict(test)
+    if type=="1":
+        model_xgb = xgb.XGBRegressor(learning_rate=0.01, n_estimators=550, max_depth=7,min_child_weight=1)
+        model_xgb.fit(X_train, y_train)
+        y_pred = model_xgb.predict(test)
+    elif type=="2":
+        model_rfr = RandomForestRegressor(n_estimators=550)
+        model_rfr.fit(X_train,y_train)
+        y_pred=model_rfr.predict(test)
+    elif type=="3":
+        model_etr = ExtraTreesRegressor(n_estimators=100)
+        model_etr.fit(X_train,y_train)
+        y_pred=model_etr.predict(test)
+    elif type=="4":
+        model_gbr=GradientBoostingRegressor(n_estimators=550)
+        model_gbr.fit(X_train,y_train)
+        y_pred=model_gbr.predict(test)
+    elif type=="5":
+        model_liner = LinearRegression()
+        model_liner.fit(X_train,y_train)
+        y_pred=model_liner.predict(test)
+    elif type=="6":
+        model_nn = load_model('./my_model.h5')
+        mean=[2.72852106e+15 ,3.88085648e+05 ,1.14774505e+02 ,3.51060848e+00,9.88294294e+02]
+        std=[3.54962054e+13, 9.77509992e+05, 1.05278795e+01 ,5.24377910e+00,5.47060186e+03]
+        mean=np.array(mean)
+        std=np.array(std)
+        test-=mean
+        test/=std
+        y_pred=model_nn.predict(test)
+        y_pred=y_pred.ravel()
+    elif type=="7":
+        model_bag=BaggingRegressor(tree.DecisionTreeRegressor(), n_estimators=100, max_samples=0.3)
+        model_bag.fit(X_train,y_train)
+        y_pred=model_bag.predict(test)
     return (y_pred[0])
 
 def pre(request):
@@ -190,6 +271,7 @@ def pre(request):
         uname=request.session['username']
     else:
         uname=''
+    type=''
     contime=20
     # price=20
     blockheight = get_recent_block()
@@ -209,17 +291,19 @@ def pre(request):
     if request.method == "POST":
         time=int(request.POST.get("confirmtime",None))
         gaslimit=int(request.POST.get("gaslimit",None))
+        type=request.POST.get("type",None)
         gasused=rate*gaslimit/100
         ethusd=getrate()
+        ethusd=float(ethusd)
         test = np.array([[difficulty, gaslimit,ethusd, gaspricel1,time]])
-        price=predict_data(test)
+        price=predict_data(test,type)
         price=round(price,2)
         if price> std:
             std=price
         if price>maxprice:
             maxprice=price
         contime=time
-    return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1})
+    return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"gaspricel1":gaspricel1,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1,"type":type})
 def home(request):
     num2 = 5
     if request.method == "POST":
@@ -337,11 +421,12 @@ def gasapi(request):
         gasusedl1 = int(block['gasUsed'], 16)
         rate = round((gasusedl1 / gaslimitl1) * 100, 2)
         ethusd=getrate()
+        ethusd=float(ethusd)
         gasused = rate * gaslimit / 100
         test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, time]])
-        gasprice = predict_data(test)
+        gasprice = predict_data(test,'1')
         gasprice = str(round(gasprice, 2))
-        return JsonResponse({'gasprice': gasprice, 'confirmtime': time, 'gaslimit': gaslimit, 'message': "predict gasprice"})
+        return JsonResponse({'gasprice': gasprice, 'confirmtime': time, 'gaslimit': gaslimit, 'message': "predict gasprice",'model':'xgboost'})
     elif price != None and gaslimit != None:
         confirm = int(price) + int(gaslimit)
         return JsonResponse({'confimetime': confirm, 'gasprice': price, 'gaslimit': gaslimit, 'message': "predict confirmtime"})

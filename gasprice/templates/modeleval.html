@@ -38,11 +38,11 @@
 							<div class="clearfix"> </div>
 						 </div>
 						 <div class="header-right">
+							<script src="../static/js/search.js"></script>
 							<div class="search-box">
-									<form action="/eval/" method="post">
-										<input type="text" placeholder="Transaction num"  name="count">
-										<input type="submit" value="">
-									</form>
+
+										<input onkeyup="searchInfo()" placeholder="Search..." type="search" id="input-info">
+
 								</div>
 							<!--notification menu end -->
 
@@ -70,47 +70,16 @@
 <!--inner block start here-->
 <div class="inner-block">
 	<div class="cols-grids panel-widget">
-						<h2>Model Evaluation</h2>
+						<h2>Model Evaluation(The error of prediction)</h2>
 					</div>
     <div class="chart-main-block">
        <div class="chart-first-line">
     	<div class="col-md-6 chart-blo-1">
     	   <div class="dygno">
-    		     <h2>Before and after GasPrice prediction</h2>
-
-				    <canvas id="line" height="300" width="470" style="width: 470px; height: 300px;"></canvas>
-								<script>
-								var lineChartData = {
-						labels : {{ label|safe }},
-						datasets : [
-							{
-								fillColor : "rgba(252, 130, 19, 0.74)",
-								strokeColor : "#FC8213",
-								pointColor : "#FC8213",
-								pointStrokeColor : "#fff",
-								data : {{ List1|safe }}
-							},
-							{
-								fillColor : "rgba(51, 122, 183, 0.71)",
-								strokeColor : "#337AB7",
-								pointColor : "#337AB7",
-								pointStrokeColor : "#fff",
-								data : {{ List2|safe }}
-							}
-						]
-
-					};
-					 new Chart(document.getElementById("line").getContext("2d")).Line(lineChartData);
-
-								</script>
-			</div>
-    	 </div>
-    	<div class="col-md-6 chart-blo-1">
-    	    <div class="line-chart">
-    		<h3>The error of prediction</h3>
-    		 <canvas id="doughnut" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+    		     <h3>Xgboost model</h3>
+                    <canvas id="bar1" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
                     <script>
-                        var barChartData = {
+                        var barChartData1 = {
 		            labels : {{ label1|safe }},
 		            datasets : [
 			        {
@@ -118,7 +87,29 @@
                         strokeColor : "#337AB7",
                         pointColor : "#337AB7",
                         pointStrokeColor : "#fff",
-				        data :{{ List4|safe }}
+				        data :{{ List1|safe }}
+			}
+		]
+
+	};
+	new Chart(document.getElementById("bar1").getContext("2d")).Bar(barChartData1);
+	</script>
+			</div>
+    	 </div>
+    	<div class="col-md-6 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Random forest model</h3>
+    		 <canvas id="doughnut" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+                    <script>
+                        var barChartData = {
+		            labels : {{ label1|safe }},
+		            datasets : [
+			        {
+				        fillColor : "rgba(252, 130, 19, 0.74)",
+                        strokeColor : "#FC8213",
+                        pointColor : "#FC8213",
+                        pointStrokeColor : "#fff",
+				        data :{{ List2|safe }}
 			}
 		]
 
@@ -130,39 +121,126 @@
     	  </div>
     	  <div class="clearfix"> </div>
     	</div>
-    	<div class="chart-second-line">
-    	<div class="col-md-12 ">
-    	     <div class="work-progres" style="overflow-y: auto; height: 400px">
-                            <div class="chit-chat-heading">
-                                  Forecat result Table
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                  <thead>
-                                    <tr>
-                                      <th>ID</th>
-									<th>Real gasprice</th>
-									<th>Predict gasprice</th>
-									<th>error</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                {% for line in data %}
-                                <tr>
-                                <td>{{ line.id }}</td>
-                                <td>{{ line.realval }}</td>
-                                <td>{{ line.predict }}</td>
-                                <td>{{ line.error }}</td>
-                                </tr>
-                {% endfor %}
-                          </tbody>
-                      </table>
-                  </div>
-             </div>
-    	  </div>
+ <div class="chart-second-line">
+    	<div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h2>Extremely random forest model</h2>
+                    <canvas id="bar3" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+                    <script>
+                        var barChartData3 = {
+		            labels : {{ label1|safe }},
+		            datasets : [
+			        {
+				        fillColor : "rgba(51, 122, 183, 0.71)",
+                        strokeColor : "#337AB7",
+                        pointColor : "#337AB7",
+                        pointStrokeColor : "#fff",
+				        data :{{ List3|safe }}
+			}
+		]
 
-    	<div class="clearfix"> </div>
+	};
+	new Chart(document.getElementById("bar3").getContext("2d")).Bar(barChartData3);
+	</script>
+			</div>
+    	 </div>
+    	<div class="col-md-6 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>Gradient boosting regression model</h3>
+    		 <canvas id="bar4" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+                    <script>
+                        var barChartData4 = {
+		            labels : {{ label1|safe }},
+		            datasets : [
+			        {
+				        fillColor : "rgba(252, 130, 19, 0.74)",
+						strokeColor : "#FC8213",
+						pointColor : "#FC8213",
+                        pointStrokeColor : "#fff",
+				        data :{{ List4|safe }}
+			}
+		]
+
+	};
+	new Chart(document.getElementById("bar4").getContext("2d")).Bar(barChartData4);
+
+                    </script>
+    	    </div>
+    	  </div>
+    	  <div class="clearfix"> </div>
     	</div>
+        <div class="chart-third-line">
+    	<div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h2>Linear regression model</h2>
+                    <canvas id="bar5" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+                    <script>
+                        var barChartData5 = {
+		            labels : {{ label1|safe }},
+		            datasets : [
+			        {
+				        fillColor : "rgba(51, 122, 183, 0.71)",
+                        strokeColor : "#337AB7",
+                        pointColor : "#337AB7",
+                        pointStrokeColor : "#fff",
+				        data :{{ List5|safe }}
+			}
+		]
+
+	};
+	new Chart(document.getElementById("bar5").getContext("2d")).Bar(barChartData5);
+	</script>
+			</div>
+    	 </div>
+    <div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h2>Neural net model</h2>
+                    <canvas id="bar6" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+                    <script>
+                        var barChartData6 = {
+		            labels : {{ label1|safe }},
+		            datasets : [
+			        {
+				        fillColor : "rgba(252, 130, 19, 0.74)",
+                        strokeColor : "#FC8213",
+                        pointColor : "#FC8213",
+                        pointStrokeColor : "#fff",
+				        data :{{ List6|safe }}
+			}
+		]
+
+	};
+	new Chart(document.getElementById("bar6").getContext("2d")).Bar(barChartData6);
+	</script>
+			</div>
+    </div>
+            <div class="clearfix"> </div>
+    	</div>
+        <div class="chart-forth-line">
+            <div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h2>Bagging Regressor model</h2>
+                    <canvas id="bar7" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+                    <script>
+                        var barChartData7 = {
+		            labels : {{ label1|safe }},
+		            datasets : [
+			        {
+				        fillColor : "rgba(51, 122, 183, 0.71)",
+                        strokeColor : "#337AB7",
+                        pointColor : "#337AB7",
+                        pointStrokeColor : "#fff",
+				        data :{{ List7|safe }}
+			}
+		]
+
+	};
+	new Chart(document.getElementById("bar7").getContext("2d")).Bar(barChartData7);
+	</script>
+			</div>
+    	 </div>
+    <div class="clearfix"> </div>
+        </div>
     </div>
 </div>
 <!--inner block end here-->
@@ -185,7 +263,7 @@
 		        <li><a href="#"><i class="fa fa-cogs"></i><span>Estimation</span><span class="fa fa-angle-right" style="float: right"></span></a>
 		          <ul>
 		            <li><a href="/pre">Forecast</a></li>
-		            <li><a href="/eval">Model Evaluation</a></li>
+		            <li><a href="/modeleval">Model Evaluation</a></li>
 		          </ul>
 		        </li>
                   <li><a href="#"><i class="fa fa-envelope"></i><span>Contact</span><span class="fa fa-angle-right" style="float: right"></span></a>

@@ -80,6 +80,18 @@
 
 				    <form class="com-mail" action="/pre/" method="post">
                                         <div class="form-group">
+                                            <label for="exampleInputName2">Please choose prediction model:</label>
+                                            <select name="type">
+                                                <option value="1">Xgboost model</option>
+                                                <option value="2">Random forest model</option>
+                                                <option value="3">Extremely random forest model</option>
+                                                <option value="4">Gradient boosting regression model</option>
+                                                <option value="5">Linear regression model</option>
+                                                <option value="6">Neural net model</option>
+                                                <option value="7">Bagging Regressor model</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
                                             <label for="exampleInputName2">Confirm time</label>
                                             <input type="text" class="form-control"  name="confirmtime" placeholder="Confirm time:">
                                         </div>
@@ -97,7 +109,13 @@
     	<div class="col-md-12 ">
     	     <div class="work-progres">
                             <div class="chit-chat-heading">
-                                  Recommend GasPrice
+                                  Recommend GasPrice &nbsp;{%  if type == "1"  %}<span style="color: red;">Xgboost model-Low GasPrice{{ price }} Gwei</span> {% endif %}
+                             {%  if type == "2"  %}<span style="color: red;">Random forest model-Low GasPrice{{ price }} Gwei</span> {% endif %}
+                              {%  if type == "3"  %}<span style="color: red;">Extremely random forest model-Low GasPrice:{{ price }} Gwei</span> {% endif %}
+                            {%  if type == "4"  %}<span style="color: red;">Gradient boosting regression model-Low GasPrice:{{ price }} Gwei</span> {% endif %}
+                            {%  if type == "5"  %}<span style="color: red;">Linear regression model-Low GasPrice:{{ price }} Gwei</span> {% endif %}
+                            {%  if type == "6"  %}<span style="color: red;">Neural net model-Low GasPrice:{{ price }} Gwei</span> {% endif %}
+                            {%  if type == "7"  %}<span style="color: red;">Bagging Regressor model-Low GasPrice:{{ price }} Gwei</span> {% endif %}
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover">
@@ -110,9 +128,9 @@
                               </thead>
                               <tbody>
                                 <tr >
-                                    <td>{{ price }}</td>
-                                    <td>{{ std }}</td>
-                                    <td>{{ maxprice }}</td>
+                                    <td>{{ price }} Gwei</td>
+                                    <td>{{ std }} Gwei</td>
+                                    <td>{{ maxprice }} Gwei</td>
                                 </tr>
                           </tbody>
                       </table>
@@ -143,10 +161,10 @@
 		      <ul id="menu" >
 			   <li id="menu-home" ><a href="/homedata"><i class="fa fa-home"></i><span>Home</span></a></li>
 			   <li><a href="/pdataPage"><i class="fa fa-bar-chart"></i><span>Data</span></a></li>
-		        <li><a href="#"><i class="fa fa-cogs"></i><span>Estimate</span><span class="fa fa-angle-right" style="float: right"></span></a>
+		        <li><a href="#"><i class="fa fa-cogs"></i><span>Estimation</span><span class="fa fa-angle-right" style="float: right"></span></a>
 		          <ul>
 		            <li><a href="/pre">Forecast</a></li>
-		            <li><a href="/eval">Model Evaluation</a></li>
+		            <li><a href="/modeleval">Model Evaluation</a></li>
 		          </ul>
 		        </li>
                   <li><a href="#"><i class="fa fa-envelope"></i><span>Contact</span><span class="fa fa-angle-right" style="float: right"></span></a>
