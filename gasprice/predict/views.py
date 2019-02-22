@@ -264,6 +264,25 @@ def predict_data(test,type):
         model_bag=BaggingRegressor(tree.DecisionTreeRegressor(), n_estimators=100, max_samples=0.3)
         model_bag.fit(X_train,y_train)
         y_pred=model_bag.predict(test)
+    elif type=="8":
+        model_lstm = load_model('./LSTM_model.h5')
+        max_axis = [99, 7607448, 166.666671752929, 2.80080318450927, 155.650497436523]
+        max_aixs = map(float, max_axis)
+        min_axis = [0, 21000, 1, 2.65067744255065, 76.4280548095703]
+        min_aixs = map(float, min_axis)
+
+        cur = [float(10), float(test[0][1]), float(test[0][4]), float(test[0][0]/1000000000000000.0), float(test[0][2])]
+        #cur = map(float, cur)
+        cur = [(cur[i] - min_axis[i]) / (max_axis[i] - min_axis[i]) for i in range(len(cur))]
+        for i in range(len(cur)):
+            if cur[i] > 1:
+                cur[i] = 1
+            if cur[i] < 0:
+                cur[i] = 0
+        # cur=[cur]
+        data = np.array([[[cur[0], cur[1], cur[2], cur[3], cur[4]]]])
+        res = model_lstm.predict(data)
+        y_pred=np.array([res[0][0]*(max_axis[0]-min_axis[0])+min_axis[0]])
     return (y_pred[0])
 
 def pre(request):
@@ -297,12 +316,17 @@ def pre(request):
         ethusd=float(ethusd)
         test = np.array([[difficulty, gaslimit,ethusd, gaspricel1,time]])
         price=predict_data(test,type)
-        price=round(price,2)
-        if price> std:
-            std=price
-        if price>maxprice:
-            maxprice=price
-        contime=time
+        if type!="8":
+            price=round(price,2)
+            if price> std:
+                std=price
+            if price>maxprice:
+                maxprice=price
+            contime=time
+        else:
+            std=0
+            maxprice=0
+            contime=0
     return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"gaspricel1":gaspricel1,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1,"type":type})
 def home(request):
     num2 = 5
