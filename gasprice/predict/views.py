@@ -24,10 +24,12 @@ from etherscan.stats import Stats
 import  urllib
 from urllib.request import urlretrieve
 from keras.models import load_model
+from sklearn.preprocessing import MinMaxScaler
 # 全局变量
 with open('./api_key.json', mode='r') as key_file:
     key = json.loads(key_file.read())['key']
 api = Proxies(api_key=key)
+scaler = MinMaxScaler(feature_range=(0, 1))
 # 导入该模块
 # Create your views here.
 # request参数必须有，名字是类似self的默认规则，可以改，它封装了用户请求的所有内容
@@ -212,58 +214,117 @@ def modeleval(request):
     return render(request,'modeleval.html',{"label1":label_list,"List1":count_list,"List2":count_list2,"List3":count_list3,"List4":count_list4,"List5":count_list5,"List6":count_list6,"List7":count_list7})
 def process_data():
     # cols = ['difficulty', 'gaslimit', 'gasused', 'gaspricel1','confirmtime','timespan1']
-    cols = ['difficulty', 'gaslimit', 'rate', 'gaspricel1', 'confirmtime']
-    data_df = pd.read_csv("./tran_data.csv")
-    # cols=['difficulty','gaspricel1','gaspricel2']
-    X=data_df[cols]
-    y=data_df['gasprice']
+    # cols = ['difficulty', 'gaslimit', 'rate', 'gaspricel1', 'confirmtime']
+    # data_df = pd.read_csv("./tran_data.csv")
+    # # cols=['difficulty','gaspricel1','gaspricel2']
+    # X=data_df[cols]
+    # y=data_df['gasprice']
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    # arr_xtrain=np.array(X_train)
+    # arr_xtest=np.array(X_test)
+    # arr_ytrain=np.array(y_train)
+    # arr_ytest=np.array(y_test)
+    # # print(arr_xtrain)
+    # return arr_xtrain,arr_xtest,arr_ytrain,arr_ytest
+    dataset = pd.read_csv('./data.csv', header=0, index_col=0)
+    values = dataset.values
+    values = values.astype('float32')
+    scaledData = scaler.fit_transform(values)
+    X = scaledData[:, :-1]
+    y = scaledData[:, -1]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-    arr_xtrain=np.array(X_train)
-    arr_xtest=np.array(X_test)
-    arr_ytrain=np.array(y_train)
-    arr_ytest=np.array(y_test)
-    # print(arr_xtrain)
-    return arr_xtrain,arr_xtest,arr_ytrain,arr_ytest
-
-
+    return X_train, X_test, y_train, y_test
+def process_test(test):
+    min = [[2.650680e+15, 2.100000e+04, 7.785000e+01, 8.000000e-01, 1.000000e+00, 1.000000e+00]]
+    max = [[2.797250e+15, 8.000000e+06, 1.533000e+02, 8.000000e+01, 1.305820e+05, 2.240000e+02]]
+    max = np.array(max)
+    min = np.array(min)
+    test = np.array(test)
+    test = (test - min) / (max - min)
+    test = np.array(test)
+    return test
 
 
 def predict_data(test,type):
     X_train, X_test, y_train, y_test=process_data()
     if type=="1":
-        model_xgb = xgb.XGBRegressor(learning_rate=0.01, n_estimators=550, max_depth=7,min_child_weight=1)
-        model_xgb.fit(X_train, y_train)
-        y_pred = model_xgb.predict(test)
+        # model_xgb = xgb.XGBRegressor(learning_rate=0.01, n_estimators=550, max_depth=7,min_child_weight=1)
+        # model_xgb.fit(X_train, y_train)
+        # y_pred = model_xgb.predict(test)
+        model_xgb= xgb.Booster(model_file='./xgb.model')
+        test=process_test(test)
+        x_test = xgb.DMatrix(test)
+        pre = model_xgb.predict(x_test)
+        x_test = test.reshape((test.shape[0], test.shape[1]))
+        y_predict_test = pre.reshape(-1, 1)
+        inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+        inv_yhat = scaler.inverse_transform(inv_yhat)
+        y_pred = inv_yhat[:, -1]
     elif type=="2":
         model_rfr = RandomForestRegressor(n_estimators=550)
         model_rfr.fit(X_train,y_train)
-        y_pred=model_rfr.predict(test)
+        test = process_test(test)
+        pre = model_rfr.predict(test)
+        x_test = test.reshape((test.shape[0], test.shape[1]))
+        y_predict_test = pre.reshape(-1, 1)
+        inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+        inv_yhat = scaler.inverse_transform(inv_yhat)
+        y_pred = inv_yhat[:, -1]
+        # y_pred=model_rfr.predict(test)
     elif type=="3":
         model_etr = ExtraTreesRegressor(n_estimators=100)
         model_etr.fit(X_train,y_train)
-        y_pred=model_etr.predict(test)
+        test = process_test(test)
+        pre = model_etr.predict(test)
+        x_test = test.reshape((test.shape[0], test.shape[1]))
+        y_predict_test = pre.reshape(-1, 1)
+        inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+        inv_yhat = scaler.inverse_transform(inv_yhat)
+        y_pred = inv_yhat[:, -1]
+        # y_pred=model_etr.predict(test)
     elif type=="4":
         model_gbr=GradientBoostingRegressor(n_estimators=550)
         model_gbr.fit(X_train,y_train)
-        y_pred=model_gbr.predict(test)
+        test = process_test(test)
+        pre = model_gbr.predict(test)
+        x_test = test.reshape((test.shape[0], test.shape[1]))
+        y_predict_test = pre.reshape(-1, 1)
+        inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+        inv_yhat = scaler.inverse_transform(inv_yhat)
+        y_pred = inv_yhat[:, -1]
+        # y_pred=model_gbr.predict(test)
     elif type=="5":
         model_liner = LinearRegression()
         model_liner.fit(X_train,y_train)
-        y_pred=model_liner.predict(test)
+        test = process_test(test)
+        pre = model_liner.predict(test)
+        x_test = test.reshape((test.shape[0], test.shape[1]))
+        y_predict_test = pre.reshape(-1, 1)
+        inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+        inv_yhat = scaler.inverse_transform(inv_yhat)
+        y_pred = inv_yhat[:, -1]
+        # y_pred=model_liner.predict(test)
     elif type=="6":
-        model_nn = load_model('./my_model.h5')
-        mean=[2.72852106e+15 ,3.88085648e+05 ,1.14774505e+02 ,3.51060848e+00,9.88294294e+02]
-        std=[3.54962054e+13, 9.77509992e+05, 1.05278795e+01 ,5.24377910e+00,5.47060186e+03]
-        mean=np.array(mean)
-        std=np.array(std)
-        test-=mean
-        test/=std
+        model_nn = load_model('./nn_model.h5')
+        min = [[2.650680e+15, 2.100000e+04, 7.785000e+01, 8.000000e-01, 1.000000e+00, 1.000000e+00]]
+        max = [[2.797250e+15, 8.000000e+06, 1.533000e+02, 8.000000e+01, 1.305820e+05, 2.240000e+02]]
+        max = np.array(max)
+        min = np.array(min)
+        test = np.array(test)
+        test = (test - min) / (max - min)
         y_pred=model_nn.predict(test)
         y_pred=y_pred.ravel()
     elif type=="7":
         model_bag=BaggingRegressor(tree.DecisionTreeRegressor(), n_estimators=100, max_samples=0.3)
         model_bag.fit(X_train,y_train)
-        y_pred=model_bag.predict(test)
+        test = process_test(test)
+        pre = model_bag.predict(test)
+        x_test = test.reshape((test.shape[0], test.shape[1]))
+        y_predict_test = pre.reshape(-1, 1)
+        inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+        inv_yhat = scaler.inverse_transform(inv_yhat)
+        y_pred = inv_yhat[:, -1]
+        # y_pred=model_bag.predict(test)
     elif type=="8":
         model_lstm = load_model('./LSTM_model.h5')
         max_axis = [99, 7607448, 166.666671752929, 2.80080318450927, 155.650497436523]
@@ -306,6 +367,7 @@ def pre(request):
     gaslimit=int(block['gasLimit'],16)
     gasused=int(block['gasUsed'],16)
     rate=round((gasused/gaslimit)*100,2)
+    transaction_num=len(block['transactions'])
     price=gaspricel1
     if request.method == "POST":
         time=int(request.POST.get("confirmtime",None))
@@ -314,10 +376,10 @@ def pre(request):
         gasused=rate*gaslimit/100
         ethusd=getrate()
         ethusd=float(ethusd)
-        test = np.array([[difficulty, gaslimit,ethusd, gaspricel1,time]])
+        test = np.array([[difficulty, gaslimit,ethusd, gaspricel1,time,transaction_num]])
         price=predict_data(test,type)
         if type!="8":
-            price=round(price,2)
+            price=abs(round(price,2))
             if price> std:
                 std=price
             if price>maxprice:
@@ -327,7 +389,7 @@ def pre(request):
             std=0
             maxprice=0
             contime=0
-    return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"gaspricel1":gaspricel1,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1,"type":type})
+    return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"gaspricel1":gaspricel1,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1,"type":type,"transactionnum":transaction_num})
 def home(request):
     num2 = 5
     if request.method == "POST":
@@ -428,32 +490,38 @@ def datal(request):
         path = os.path.abspath('.')
         return render(request, 'datal.html', {"type": infotype, "info": list, "path": path})
 def gasapi(request):
-    time = request.GET.get("time", None)
+    time = request.GET.get("confirmtime", None)
     gaslimit = request.GET.get("gaslimit", None)
-    price = request.GET.get("price", None)
+    price = request.GET.get("gasprice", None)
+    blockheight = get_recent_block()
+    block_list = creat_block_list(blockheight, 2)
+    lowprice_list, aveprice_list, maxprice_list, timestamp_list = get_pre_Data(block_list)
+    gaspricel1 = lowprice_list[0]
+    timespan1 = timestamp_list[0] - timestamp_list[1]
+    block = api.get_block_by_number(blockheight)
+    difficulty = int(block['difficulty'], 16)
+    # gaslimitl1 = int(block['gasLimit'], 16)
+    # gasusedl1 = int(block['gasUsed'], 16)
+    transaction_num = len(block['transactions'])
+    # rate = round((gasusedl1 / gaslimitl1) * 100, 2)
+    ethusd = getrate()
+    ethusd = float(ethusd)
+    # gasused = rate * gaslimit / 100
     if time != None and gaslimit != None:
         time = int(time)
         gaslimit = int(gaslimit)
-        blockheight = get_recent_block()
-        block_list = creat_block_list(blockheight, 2)
-        lowprice_list, aveprice_list, maxprice_list, timestamp_list = get_pre_Data(block_list)
-        gaspricel1 = lowprice_list[0]
-        timespan1 = timestamp_list[0] - timestamp_list[1]
-        block = api.get_block_by_number(blockheight)
-        difficulty = int(block['difficulty'], 16)
-        gaslimitl1 = int(block['gasLimit'], 16)
-        gasusedl1 = int(block['gasUsed'], 16)
-        rate = round((gasusedl1 / gaslimitl1) * 100, 2)
-        ethusd=getrate()
-        ethusd=float(ethusd)
-        gasused = rate * gaslimit / 100
-        test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, time]])
+        test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, time,transaction_num]])
         gasprice = predict_data(test,'1')
         gasprice = str(round(gasprice, 2))
         return JsonResponse({'gasprice': gasprice, 'confirmtime': time, 'gaslimit': gaslimit, 'message': "predict gasprice",'model':'xgboost'})
     elif price != None and gaslimit != None:
-        confirm = int(price) + int(gaslimit)
-        return JsonResponse({'confimetime': confirm, 'gasprice': price, 'gaslimit': gaslimit, 'message': "predict confirmtime"})
+        price=int(price)
+        gaslimit = int(gaslimit)
+        test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, price]])
+        confirm = predict_data(test, '8')
+        confirm = str(round(confirm, 2))
+        # confirm = price + int(gaslimit)
+        return JsonResponse({'confimetime': confirm, 'gasprice': price, 'gaslimit': gaslimit, 'message': "predict confirmtime","model":"LSTM"})
     else:
         return JsonResponse({"status": "0", "message": "NOTOK", "result": "Invalid API URL endpoint, use api.gaspricing.io"})
 #Newly added information about chart data
