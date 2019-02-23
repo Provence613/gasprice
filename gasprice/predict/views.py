@@ -512,14 +512,15 @@ def gasapi(request):
         gaslimit = int(gaslimit)
         test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, time,transaction_num]])
         gasprice = predict_data(test,'1')
-        gasprice = str(round(gasprice, 2))
+        gasprice = round(gasprice, 2)
         return JsonResponse({'gasprice': gasprice, 'confirmtime': time, 'gaslimit': gaslimit, 'message': "predict gasprice",'model':'xgboost'})
     elif price != None and gaslimit != None:
         price=int(price)
         gaslimit = int(gaslimit)
         test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, price]])
         confirm = predict_data(test, '8')
-        confirm = str(round(confirm, 2))
+        # confirm = str(round(confirm, 2))
+        confirm = round(confirm, 2)
         # confirm = price + int(gaslimit)
         return JsonResponse({'confimetime': confirm, 'gasprice': price, 'gaslimit': gaslimit, 'message': "predict confirmtime","model":"LSTM"})
     else:
