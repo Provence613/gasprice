@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 # 首先导入对应app的views文件
 from predict import  views
+from predict import  viewstime
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path(r'modeleval/',views.modeleval),
@@ -31,8 +32,8 @@ urlpatterns = [
     path(r'pre/',views.pre),
     path(r'home/', views.home),
     path(r'about/', views.about),
-    path(r'forecast/', views.forecast),
-    path(r'backtest/', views.backtest),
+    path(r'forecast/', viewstime.forecast),
+    path(r'backtest/', viewstime.backtest),
     path(r'contact/', views.contact),
     path(r'blockexplorer/', views.blockexplorer),
     path(r'phome/', views.phome),

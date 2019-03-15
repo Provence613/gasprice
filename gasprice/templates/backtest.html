@@ -139,29 +139,167 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 		</div>
 		<!-- //header-ends -->
 		<!-- main content start-->
-		<div id="page-wrapper">
-			<div class="main-page">
-				<!--grids-->
-				<div class="grids">
-					<div class="progressbar-heading grids-heading">
-						<h2>Back Test</h2>
+		<div class="inner-block">
+	<div class="cols-grids panel-widget">
+						<h2>Model Evaluation</h2>
 					</div>
-					<div class="panel panel-widget forms-panel">
-						<div class="forms">
-							<div class="form-two widget-shadow">
-								<div class="form-title">
-									<h4>Input</h4>
-								</div>
-								<div class="form-body" data-example-id="simple-form-inline">
-									<form class="form-inline"> <div class="form-group"> <label for="exampleInputName2">Gas Price</label> <input type="text" class="form-control" id="exampleInputName2" placeholder="Expected gas price"> </div> <div class="form-group"> <label for="exampleInputEmail2">Gas Limit</label> <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Estimate gas limit"> </div> <button type="submit" class="btn btn-default">Back Test Now</button> </form> 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--//grids-->
+    <div class="chart-main-block">
+        <div class="row mb40">
+    	<div class="col-md-12 ">
+    	   <div class="dygno">
+    		     <h2>Input</h2>
+           {% if flag == 1 %}
+               {%  if type == "1"  %}<span style="color: red;"> Selected model:Xgboost model</span> {% endif %}
+               {%  if type == "2"  %}<span style="color: red;"> Selected model:Random forest model</span> {% endif %}
+               {%  if type == "3"  %}<span style="color: red;"> Selected model:Extremely random forest model </span>{% endif %}
+               {%  if type == "4"  %}<span style="color: red;"> Selected model:Gradient boosting regression model</span>{% endif %}
+               {%  if type == "5"  %}<span style="color: red;"> Selected model:Linear regression model</span> {% endif %}
+              {%  if type == "6"  %}<span style="color: red;"> Selected model:Bagging Regressor model</span> {% endif %}
+               {%  if time == 27000000  %}<span style="color: red;"> Time interval:00:00-02:00</span> {% endif %}
+               {%  if time == 27020000  %}<span style="color: red;"> Time interval:00:20-04:00</span> {% endif %}
+               {%  if time == 27040000  %}<span style="color: red;"> Time interval:04:00-06:00 </span>{% endif %}
+               {%  if time == 27060000 %}<span style="color: red;"> Time interval:06:00-08:00</span>{% endif %}
+               {%  if time == 27080000 %}<span style="color: red;"> Time interval:08:00-10:00</span> {% endif %}
+               {%  if time == 26100000 %}<span style="color: red;"> Time interval:10:00-12:00</span> {% endif %}
+               {%  if time == 26120000 %}<span style="color: red;"> Time interval:12:00-14:00</span> {% endif %}
+               {%  if time == 26140000  %}<span style="color: red;"> Time interval:14:00-16:00</span> {% endif %}
+               {%  if time == 26160000  %}<span style="color: red;"> Time interval:16:00-18:00 </span>{% endif %}
+               {%  if time == 26180000 %}<span style="color: red;"> Time interval:18:00-20:00</span>{% endif %}
+               {%  if time == 26200000 %}<span style="color: red;"> Time interval:20:00-22:00</span> {% endif %}
+              {%  if time == 26220000 %}<span style="color: red;"> Time interval:22:00-24:00</span> {% endif %}
+               <span style="color: red;"> Transaction count:{{ count }}</span>
+           {% endif %}
+				    <form class="com-mail" action="/backtest/" method="post">
+                                        <div class="form-group">
+                                            <label for="exampleInputName2">Please choose prediction model:</label>
+                                            <select name="type">
+                                                <option value="1">Xgboost model</option>
+                                                <option value="2">Random forest model</option>
+                                                <option value="3">Extremely random forest model</option>
+                                                <option value="4">Gradient boosting regression model</option>
+                                                <option value="5">Linear regression model</option>
+                                                <option value="6">Bagging Regressor model</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputName2">Please choose test set in specified time interval:</label>
+                                             <select name="time">
+                                                <option value="27000000">00:00-02:00</option>
+                                                <option value="27020000">02:00-04:00</option>
+                                                <option value="27040000">04:00-06:00</option>
+                                                <option value="27060000">06:00-08:00</option>
+                                                <option value="27080000">08:00-10:00</option>
+                                                <option value="26100000">10:00-12:00</option>
+                                                <option value="26120000">12:00-14:00</option>
+                                                <option value="26140000">14:00-16:00</option>
+                                                <option value="26160000">16:00-18:00</option>
+                                                <option value="26180000">18:00-20:00</option>
+                                                <option value="26200000">20:00-22:00</option>
+                                                <option value="26220000">22:00-24:00</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail2">Transaction num</label>
+                                            <input type="text" class="form-control"  name="count" placeholder="transaction num">
+                                        </div> <button type="submit" class="btn btn-default">Evaluate Now</button>
+                                    </form>
 			</div>
-		</div>
+    	 </div>
+
+    	  <div class="clearfix"> </div>
+    	</div>
+       <div class="chart-first-line">
+    	<div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h2>Before and after GasPrice prediction</h2>
+
+				    <canvas id="line" height="300" width="470" style="width: 470px; height: 300px;"></canvas>
+								<script>
+								var lineChartData = {
+						labels : {{ label|safe }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ List1|safe }}
+							},
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{ List2|safe }}
+							}
+						]
+
+					};
+					 new Chart(document.getElementById("line").getContext("2d")).Line(lineChartData);
+
+								</script>
+			</div>
+    	 </div>
+    	<div class="col-md-6 chart-blo-1">
+    	    <div class="line-chart">
+    		<h3>The error of prediction</h3>
+    		 <canvas id="doughnut" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+                    <script>
+                        var barChartData = {
+		            labels : {{ label1|safe }},
+		            datasets : [
+			        {
+				        fillColor : "rgba(51, 122, 183, 0.71)",
+                        strokeColor : "#337AB7",
+                        pointColor : "#337AB7",
+                        pointStrokeColor : "#fff",
+				        data :{{ List4|safe }}
+			}
+		]
+
+	};
+	new Chart(document.getElementById("doughnut").getContext("2d")).Bar(barChartData);
+
+                    </script>
+    	    </div>
+    	  </div>
+    	  <div class="clearfix"> </div>
+    	</div>
+{#    	<div class="chart-second-line">#}
+{#    	<div class="col-md-12 ">#}
+{#    	     <div class="work-progres" style="overflow-y: auto; height: 400px">#}
+{#                            <div class="chit-chat-heading">#}
+{#                                  Forecat result Table#}
+{#                            </div>#}
+{#                            <div class="table-responsive">#}
+{#                                <table class="table table-hover">#}
+{#                                  <thead>#}
+{#                                    <tr>#}
+{#                                      <th>ID</th>#}
+{#									<th>Real gasprice</th>#}
+{#									<th>Predict gasprice</th>#}
+{#									<th>error</th>#}
+{#                                  </tr>#}
+{#                              </thead>#}
+{#                              <tbody>#}
+{#                                {% for line in data %}#}
+{#                                <tr>#}
+{#                                <td>{{ line.id }}</td>#}
+{#                                <td>{{ line.realval }}</td>#}
+{#                                <td>{{ line.predict }}</td>#}
+{#                                <td>{{ line.error }}</td>#}
+{#                                </tr>#}
+{#                {% endfor %}#}
+{#                          </tbody>#}
+{#                      </table>#}
+{#                  </div>#}
+{#             </div>#}
+{#    	  </div>#}
+{##}
+{#    	<div class="clearfix"> </div>#}
+{#    	</div>#}
+    </div>
+</div>
 		<!--footer-->
 		 <div class="dev-page">
 	 

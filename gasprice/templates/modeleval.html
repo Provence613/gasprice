@@ -38,10 +38,13 @@
 							<div class="clearfix"> </div>
 						 </div>
 						 <div class="header-right">
-							<script src="../static/js/search.js"></script>
+{#							<script src="../static/js/search.js"></script>#}
 							<div class="search-box">
-
-										<input onkeyup="searchInfo()" placeholder="Search..." type="search" id="input-info">
+                            <form action="/modeleval/" method="post">
+										<input type="text" placeholder="Transaction num"  name="count">
+										<input type="submit" value="">
+									</form>
+{#										<input onkeyup="searchInfo()" placeholder="Search..." type="search" id="input-info">#}
 
 								</div>
 							<!--notification menu end -->
@@ -70,14 +73,15 @@
 <!--inner block start here-->
 <div class="inner-block">
 	<div class="cols-grids panel-widget">
-						<h2>Model Evaluation(The error of prediction)</h2>
+						<h2>Model Evaluation</h2>
 					</div>
     <div class="chart-main-block">
        <div class="chart-first-line">
+           <h2>Xgboost model</h2>
     	<div class="col-md-6 chart-blo-1">
     	   <div class="dygno">
-    		     <h3>Xgboost model</h3>
-                    <canvas id="bar1" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
+    		     <h3>The error of prediction</h3>
+                    <canvas id="bar1" height="300" width="400" > </canvas>
                     <script>
                         var barChartData1 = {
 		            labels : {{ label1|safe }},
@@ -96,9 +100,45 @@
 	</script>
 			</div>
     	 </div>
-    	<div class="col-md-6 chart-blo-1">
+               	<div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h3>Before and after GasPrice prediction</h3>
+
+				    <canvas id="line1" height="300" width="400" ></canvas>
+								<script>
+								var lineChartData1= {
+						labels : {{ id_list1|safe }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ real_list1|safe }}
+							},
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{pred_list1|safe }}
+							}
+						]
+
+					};
+					 new Chart(document.getElementById("line1").getContext("2d")).Line(lineChartData1);
+
+								</script>
+			</div>
+    	 </div>
+
+    	  <div class="clearfix"> </div>
+    	</div>
+        <div class="chart-second-line">
+            <h2>Random forest model</h2>
+            <div class="col-md-6 chart-blo-1">
     	    <div class="line-chart">
-    		<h3>Random forest model</h3>
+    		<h3>The error of prediction</h3>
     		 <canvas id="doughnut" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
                     <script>
                         var barChartData = {
@@ -119,12 +159,44 @@
                     </script>
     	    </div>
     	  </div>
-    	  <div class="clearfix"> </div>
-    	</div>
- <div class="chart-second-line">
+            <div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h3>Before and after GasPrice prediction</h3>
+
+				    <canvas id="line2" height="300" width="400" ></canvas>
+								<script>
+								var lineChartData2= {
+						labels : {{ id_list1|safe }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ real_list2|safe }}
+							},
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{pred_list2|safe }}
+							}
+						]
+
+					};
+					 new Chart(document.getElementById("line2").getContext("2d")).Line(lineChartData2);
+
+								</script>
+			</div>
+    	 </div>
+            <div class="clearfix"></div>
+        </div>
+ <div class="chart-third-line">
+     <h2>Extremely random forest model</h2>
     	<div class="col-md-6 chart-blo-1">
     	   <div class="dygno">
-    		     <h2>Extremely random forest model</h2>
+    		     <h3>The error of prediction</h3>
                     <canvas id="bar3" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
                     <script>
                         var barChartData3 = {
@@ -144,9 +216,44 @@
 	</script>
 			</div>
     	 </div>
-    	<div class="col-md-6 chart-blo-1">
+           <div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h3>Before and after GasPrice prediction</h3>
+
+				    <canvas id="line3" height="300" width="400" ></canvas>
+								<script>
+								var lineChartData3= {
+						labels : {{ id_list1|safe }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ real_list3|safe }}
+							},
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{pred_list3|safe }}
+							}
+						]
+
+					};
+					 new Chart(document.getElementById("line3").getContext("2d")).Line(lineChartData3);
+
+								</script>
+			</div>
+    	 </div>
+    	  <div class="clearfix"> </div>
+    	</div>
+        <div class="chart-forth-line">
+            <h2>Gradient boosting regression model</h2>
+            <div class="col-md-6 chart-blo-1">
     	    <div class="line-chart">
-    		<h3>Gradient boosting regression model</h3>
+    		<h3>The error of prediction</h3>
     		 <canvas id="bar4" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
                     <script>
                         var barChartData4 = {
@@ -167,12 +274,44 @@
                     </script>
     	    </div>
     	  </div>
-    	  <div class="clearfix"> </div>
-    	</div>
-        <div class="chart-third-line">
+               <div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h3>Before and after GasPrice prediction</h3>
+
+				    <canvas id="line4" height="300" width="400"></canvas>
+								<script>
+								var lineChartData4= {
+						labels : {{ id_list1|safe }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ real_list4|safe }}
+							},
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{pred_list4|safe }}
+							}
+						]
+
+					};
+					 new Chart(document.getElementById("line4").getContext("2d")).Line(lineChartData4);
+
+								</script>
+			</div>
+    	 </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="chart-fifth-line">
+            <h2>Linear regression model</h2>
     	<div class="col-md-6 chart-blo-1">
     	   <div class="dygno">
-    		     <h2>Linear regression model</h2>
+    		     <h3>The error of prediction</h3>
                     <canvas id="bar5" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
                     <script>
                         var barChartData5 = {
@@ -192,9 +331,44 @@
 	</script>
 			</div>
     	 </div>
-    <div class="col-md-6 chart-blo-1">
+           <div class="col-md-6 chart-blo-1">
     	   <div class="dygno">
-    		     <h2>Neural net model</h2>
+    		     <h3>Before and after GasPrice prediction</h3>
+
+				    <canvas id="line5" height="300" width="400" ></canvas>
+								<script>
+								var lineChartData5= {
+						labels : {{ id_list1|safe }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ real_list5|safe }}
+							},
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{pred_list5|safe }}
+							}
+						]
+
+					};
+					 new Chart(document.getElementById("line5").getContext("2d")).Line(lineChartData5);
+
+								</script>
+			</div>
+    	 </div>
+            <div class="clearfix"> </div>
+    	</div>
+        <div class="chart-sixth-line">
+            <h2>Neural net model</h2>
+            <div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h3>The error of prediction</h3>
                     <canvas id="bar6" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
                     <script>
                         var barChartData6 = {
@@ -214,12 +388,44 @@
 	</script>
 			</div>
     </div>
-            <div class="clearfix"> </div>
-    	</div>
-        <div class="chart-forth-line">
+               <div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h3>Before and after GasPrice prediction</h3>
+
+				    <canvas id="line6" height="300" width="400" ></canvas>
+								<script>
+								var lineChartData6= {
+						labels : {{ id_list1|safe }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ real_list6|safe }}
+							},
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{pred_list6|safe }}
+							}
+						]
+
+					};
+					 new Chart(document.getElementById("line6").getContext("2d")).Line(lineChartData6);
+
+								</script>
+			</div>
+    	 </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="chart-seventh-line">
+             <h2>Bagging Regressor model</h2>
             <div class="col-md-6 chart-blo-1">
     	   <div class="dygno">
-    		     <h2>Bagging Regressor model</h2>
+    		     <h3>The error of prediction</h3>
                     <canvas id="bar7" height="300" width="400" style="width: 400px; height: 300px;"> </canvas>
                     <script>
                         var barChartData7 = {
@@ -237,6 +443,37 @@
 	};
 	new Chart(document.getElementById("bar7").getContext("2d")).Bar(barChartData7);
 	</script>
+			</div>
+    	 </div>
+               <div class="col-md-6 chart-blo-1">
+    	   <div class="dygno">
+    		     <h3>Before and after GasPrice prediction</h3>
+
+				    <canvas id="line7" height="300" width="400" ></canvas>
+								<script>
+								var lineChartData7= {
+						labels : {{ id_list1|safe }},
+						datasets : [
+							{
+								fillColor : "rgba(252, 130, 19, 0.74)",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
+								pointStrokeColor : "#fff",
+								data : {{ real_list7|safe }}
+							},
+							{
+								fillColor : "rgba(51, 122, 183, 0.71)",
+								strokeColor : "#337AB7",
+								pointColor : "#337AB7",
+								pointStrokeColor : "#fff",
+								data : {{pred_list7|safe }}
+							}
+						]
+
+					};
+					 new Chart(document.getElementById("line7").getContext("2d")).Line(lineChartData7)
+
+								</script>
 			</div>
     	 </div>
     <div class="clearfix"> </div>

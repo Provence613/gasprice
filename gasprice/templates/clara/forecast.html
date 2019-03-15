@@ -224,28 +224,59 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		<!-- /script-for sticky-nav -->
 <!--inner block start here-->
 <div class="inner-block">
-    <div class="inbox">
-    	  <h2>Forecast</h2>
-    	 	<div class="col-md-8 compose-right">
-					<div class="inbox-details-default">
-						<div class="inbox-details-heading">
-							Forecast
-						</div>
-						<div class="inbox-details-body">
-							<div class="alert alert-info">
-								Please fill details to forecast
-							</div>
-							<form class="com-mail">
-								<input type="text"  value="Gas Price" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'To';}">
-								<input type="text"  value="Gas Limit" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Subject';}">
-								<input type="submit" value="Forecast">
-							</form>
-						</div>
+	<div class="cols-grids panel-widget">
+						<h2>Confirmtime Forecast-- Last update: Block {{ height }}</h2>
 					</div>
-				</div>
+    <div class="chart-main-block">
+       <div class="row mb40">
+    	<div class="col-md-12 ">
+    	   <div class="dygno">
+    		     <h2>Input</h2>
 
-          <div class="clearfix"> </div>     
-   </div>
+				    <form class="com-mail" action="/forecast/" method="post">
+                                        <div class="form-group">
+                                            <label for="exampleInputName2">Please choose prediction model:</label>
+                                            <select name="type">
+                                                <option value="1">Xgboost model</option>
+                                                <option value="2">Random forest model</option>
+                                                <option value="3">Extremely random forest model</option>
+                                                <option value="4">Gradient boosting regression model</option>
+                                                <option value="5">Linear regression model</option>
+                                                <option value="6">Bagging Regressor model</option>
+                                                <option value="7">LSTM model</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputName2">Gas Price</label>
+                                            <input type="text" class="form-control"  name="gasprice" placeholder="Gas Price:">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail2">Gas Limit</label>
+                                            <input type="text" class="form-control"  name="gaslimit" placeholder="Estimate gas limit">
+                                        </div> <button type="submit" class="btn btn-default">Forecast Now</button>
+                                    </form>
+			</div>
+    	 </div>
+
+    	  <div class="clearfix"> </div>
+    	</div>
+    	<div class="row mb40">
+    	<div class="col-md-12 ">
+    	     <div class="work-progres">
+                            <div class="chit-chat-heading">
+                                  Recommend Confirmtime &nbsp;{%  if type == "1"  %}<span style="color: red;">Xgboost model-Confirmtime {{ confirmtime }} s</span> {% endif %}
+                             {%  if type == "2"  %}<span style="color: red;">Random forest model-Confirmtime {{ confirmtime  }} s</span> {% endif %}
+                              {%  if type == "3"  %}<span style="color: red;">Extremely random forest model-Confirmtime {{ confirmtime  }} s</span> {% endif %}
+                            {%  if type == "4"  %}<span style="color: red;">Gradient boosting regression model-Confirmtime {{ confirmtime }} s</span> {% endif %}
+                            {%  if type == "5"  %}<span style="color: red;">Linear regression model-Confirmtime {{ confirmtime  }} s</span> {% endif %}
+                            {%  if type == "6"  %}<span style="color: red;">Bagging Regressor model-Confirmtime {{ confirmtime  }} s</span> {% endif %}
+                            {%  if type == "7"  %}<span style="color: red;">LSTM model-Confirmtime {{ confirmtime  }} s</span> {% endif %}
+                            </div>
+             </div>
+    	  </div>
+    	<div class="clearfix"> </div>
+    	</div>
+    </div>
 </div>
 
 <!--inner block end here-->

@@ -40,11 +40,18 @@
 						 </div>
 						 <div class="header-right">
 							<script src="../static/js/search.js"></script>
-							<div class="search-box">
-
-										<input onkeyup="searchInfo()" placeholder="Search..." type="search" id="input-info">
-
-								</div>
+                             							<!--search-box-->
+								<div class="search-box">
+									<form>
+										<input onkeyup="searchInfo()"type="text" placeholder="Search..." required="">
+										<input type="submit" value="">
+									</form>
+								</div><!--//end-search-box-->
+{#							<div class="search-box">#}
+{##}
+{#										<input onkeyup="searchInfo()" placeholder="Search..." type="search" id="input-info">#}
+{##}
+{#								</div>#}
 							<!--notification menu end -->
 
 							<div class="clearfix"> </div>
@@ -100,10 +107,10 @@
 				</div>
 			</div>
              <div class="col-md-3 market-update-gd">
-                    <div class="market-update-block clr-block-1">
+                    <div class="market-update-block clr-block-4">
                         <div class="col-md-8 market-update-left">
-                            <h3>23</h3>
-                            <h4>Avg Duration(s)</h4>
+                            <h3>{{ maxprice.0 }}</h3>
+                            <h4>Max Gas Price (gWei)</h4>
                         </div>
                       <div class="clearfix"> </div>
                     </div>
@@ -123,9 +130,9 @@
 						labels : {{ height }},
 						datasets : [
 							{
-								fillColor : "rgba(252, 130, 19, 0.74)",
-								strokeColor : "#FC8213",
-								pointColor : "#FC8213",
+								fillColor : "#68ae00",
+								strokeColor : "#68ae00",
+								pointColor : "#68ae00",
 								pointStrokeColor : "#fff",
 								data : {{ num }}
 							}
@@ -146,9 +153,9 @@
 						labels : {{ height }},
 						datasets : [
 							{
-								fillColor : "rgba(51, 122, 183, 0.71)",
-								strokeColor : "#337AB7",
-								pointColor : "#337AB7",
+								fillColor : "#FC8213",
+								strokeColor : "#FC8213",
+								pointColor : "#FC8213",
 								pointStrokeColor : "#fff",
 								data : {{ lowprice }}
 							}
@@ -172,7 +179,7 @@
 						labels : {{ height }},
 						datasets : [
 							{
-								fillColor : "rgba(51, 122, 183, 0.71)",
+								fillColor : "#337AB7",
 								strokeColor : "#337AB7",
 								pointColor : "#337AB7",
 								pointStrokeColor : "#fff",
@@ -188,18 +195,18 @@
     	  </div>
           <div class="col-md-6 chart-blo-1">
     	    <div class="line-chart">
-    		<h3>Avg Duration in Last Blocks</h3>
+    		<h3>Max Gas Price in Last Blocks</h3>
     		 <canvas id="line2" height="600" width="820" style="width: 410px; height: 300px;"> </canvas>
                     <script>
                         var lineChartData = {
 						labels : {{ height }},
 						datasets : [
 							{
-								fillColor : "rgba(252, 130, 19, 0.74)",
-								strokeColor : "#FC8213",
-								pointColor : "#FC8213",
+								fillColor : "#FC6",
+								strokeColor : "#FC6",
+								pointColor : "#FC6",
 								pointStrokeColor : "#fff",
-								data : {{ num }}
+								data : {{ maxprice }}
 							}
 						]
 
@@ -234,7 +241,7 @@
 		        <li><a href="#"><i class="fa fa-cogs"></i><span>Estimation</span><span class="fa fa-angle-right" style="float: right"></span></a>
 		          <ul>
 		            <li><a href="/pre">Forecast</a></li>
-		            <li><a href="/modeleval">Model Evaluation</a></li>
+		            <li><a href="/eval">Model Evaluation</a></li>
 		          </ul>
 		        </li>
                   <li><a href="#"><i class="fa fa-envelope"></i><span>Contact</span><span class="fa fa-angle-right" style="float: right"></span></a>

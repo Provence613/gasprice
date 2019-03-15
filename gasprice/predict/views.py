@@ -21,15 +21,22 @@ import numpy as np
 import os
 from etherscan.proxies import Proxies
 from etherscan.stats import Stats
+import requests
 import  urllib
 from urllib.request import urlretrieve
 from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
+from numpy import concatenate
+import pickle
+import keras
 # 全局变量
 with open('./api_key.json', mode='r') as key_file:
     key = json.loads(key_file.read())['key']
 api = Proxies(api_key=key)
 scaler = MinMaxScaler(feature_range=(0, 1))
+scaler1 = MinMaxScaler(feature_range=(0, 1))
+# predict confirmtime
+scaler2 = MinMaxScaler(feature_range=(0, 1))
 # 导入该模块
 # Create your views here.
 # request参数必须有，名字是类似self的默认规则，可以改，它封装了用户请求的所有内容
@@ -129,89 +136,244 @@ def getrate():
     api1 = Stats(api_key=key)
     last_price = api1.get_ether_last_price()
     return last_price['ethusd']
+def process_eval(start,stop):
+
+    dataset = pd.read_csv('./blockinfo2.csv', header=0, index_col=0)
+    # test set
+    values = dataset.values
+    values = values.astype('float32')
+    test_set = dataset[(dataset.date > start) & (dataset.date < stop)]
+    # train set
+    cols = ['height', 'date', 'gaspricel1','difficulty', 'gaslimit', 'rate',  'confirmtime', 'transaction_count','size', 'reward']
+    X = dataset[cols]
+    y = dataset['gasprice']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    n_train_size = X_train.shape[0]
+    train_set = pd.concat([X_train, y_train], axis=1, ignore_index=False)
+    all = pd.concat([train_set, test_set], axis=0, ignore_index=False)
+    values = all.values
+    values = values.astype('float32')
+    values = values[:, 2:]
+    scaledData = scaler1.fit_transform(values)
+    train = scaledData[:n_train_size, :]
+    test = scaledData[n_train_size:, :]
+    # split into input and outputs
+    X_train, y_train = train[:, :-1], train[:, -1]
+    X_test, y_test = test[:, :-1], test[:, -1]
+    return  X_train, X_test, y_train, y_test
 def eval(request):
-    if request.session.get('is_login') == '1':
-        uname = request.session['username']
-    else:
-        uname = ''
     if request.method == "POST":
         count1=int(request.POST.get("count",None))
-        data1 = Predictres.objects.filter(id__lte=count1, id__gte=1)
+        start=int(request.POST.get("time",None))
+        type=request.POST.get("type",None)
+        stop=start+20000
+        flag=1
     else:
         count1=20
-        data1 = Predictres.objects.filter(id__lte=20, id__gte=1)
-    real_list = []
-    pred_list = []
-    error_list = []
+        type="1"
+        start=26100000
+        stop=26120000
+        flag=0
+    X_train, X_test, y_train, y_test = process_eval(start,stop)
+    #scaler1是model evaluation
+    if type=="7":
+        keras.backend.clear_session()
+        model_lstm = load_model('./lstm_model_price.h5')
+        test = X_test.reshape((X_test.shape[0], 1, X_test.shape[1]))
+        # print(test)
+        pre = model_lstm.predict(test)
+        x_test = test.reshape((test.shape[0], test.shape[2]))
+        y_predict_test = pre.reshape(-1, 1)
+        inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+        inv_yhat = scaler1.inverse_transform(inv_yhat)
+        y_predict_test = inv_yhat[:, -1]
+        # invert scaling for actual
+        y_test_invert = y_test.reshape(-1, 1)
+        inv_y = concatenate((x_test, y_test_invert), axis=1)
+        inv_y = scaler1.inverse_transform(inv_y)
+        y_test_res = inv_y[:, -1]
+        df_real_predict_test = pd.DataFrame({'real': y_test_res, 'predict': y_predict_test, 'error': abs(y_predict_test - y_test_res)})
+    else:
+        if type == "1":
+            model_xgb = xgb.Booster(model_file='./xgb.model')
+            x_test = xgb.DMatrix(X_test)
+            y_predict_test = model_xgb.predict(x_test)
+            # model = xgb.XGBRegressor(learning_rate=0.01, n_estimators=600, max_depth=7, min_child_weight=1)
+        elif type == "2":
+            # model = RandomForestRegressor(n_estimators=550)
+            # model.fit(X_train, y_train)
+            with open("./model_rf.pkl", "rb") as f:
+                model = pickle.load(f)
+            y_predict_test = model.predict(X_test)
+        elif type == "3":
+            # model = ExtraTreesRegressor(n_estimators=100)
+            # model.fit(X_train, y_train)
+            with open("./model_etr.pkl", "rb") as f:
+                model = pickle.load(f)
+            y_predict_test = model.predict(X_test)
+        elif type == "4":
+            # model = GradientBoostingRegressor(n_estimators=550)
+            # model.fit(X_train, y_train)
+            with open("./model_gbr.pkl", "rb") as f:
+                model= pickle.load(f)
+            y_predict_test = model.predict(X_test)
+        elif type == "5":
+            # model = LinearRegression()
+            # model.fit(X_train, y_train)
+            with open("./model_linear.pkl", "rb") as f:
+                model= pickle.load(f)
+            y_predict_test = model.predict(X_test)
+        elif type == "6":
+            # model = BaggingRegressor(tree.DecisionTreeRegressor(), n_estimators=100, max_samples=0.3)
+            # model.fit(X_train, y_train)
+            with open("./model_bag.pkl", "rb") as f:
+                model= pickle.load(f)
+            y_predict_test = model.predict(X_test)
+        # model.fit(X_train, y_train)
+        # # 测试集
+        # y_predict_test = model.predict(X_test)
+        X_test_invert = X_test.reshape((X_test.shape[0], X_test.shape[1]))
+        y_predict_test = y_predict_test.reshape(-1, 1)
+        inv_yhat = concatenate((X_test_invert[:, 0:], y_predict_test), axis=1)
+        inv_yhat = scaler1.inverse_transform(inv_yhat)
+        y_predict_test = inv_yhat[:, -1]
+        # invert scaling for actual
+        y_test_invert = y_test.reshape(-1, 1)
+        inv_y = concatenate((X_test_invert, y_test_invert), axis=1)
+        inv_y = scaler1.inverse_transform(inv_y)
+        y_test_res = inv_y[:, -1]
+        df_real_predict_test = pd.DataFrame({'real': y_test_res, 'predict': y_predict_test, 'error': abs(y_predict_test - y_test_res)})
+    part_data = df_real_predict_test.head(count1)
+    real_list = part_data['real'].tolist()
+    pred_list = part_data['predict'].tolist()
+    error_list=part_data['error'].tolist()
+    df_1 = df_real_predict_test[df_real_predict_test.error < 1]
+    df_2 = df_real_predict_test[(df_real_predict_test.error > 1) & (df_real_predict_test.error < 5)]
+    df_3 = df_real_predict_test[(df_real_predict_test.error > 5) & (df_real_predict_test.error < 10)]
+    df_4 = df_real_predict_test[(df_real_predict_test.error > 10) & (df_real_predict_test.error < 15)]
+    df_5 = df_real_predict_test[df_real_predict_test.error > 15]
+    count_list = [df_1.shape[0], df_2.shape[0], df_3.shape[0], df_4.shape[0], df_5.shape[0]]
     id_list=[]
+    for id in range(count1):
+        id_list.append(id+1)
+    label_list = ['<1', '1<5', '5<10', '10<15', '>15']
+    return render(request,'eval.html',{"flag":flag,"type":type,"time":start,"count":count1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"label1":label_list,"List4":count_list})
+def modeleval(request):
+    if request.method == "POST":
+        count1=int(request.POST.get("count",None))
+    else:
+        count1=20
     cursor = connection.cursor()
-    cursor.execute("select * from predictres where id>0 limit %s" % (count1))
-    # 使用一个变量来接收查询到的数据，
-    # fetchall（）返回查询到的所有数据
-    results = cursor.fetchall()
-    for row in results:
+    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=1 group by i_p;")
+    results1 = cursor.fetchall()
+    label_list = ['<1', '1<5', '5<10', '10<15', '>15']
+    count_list=[]
+    for row in results1:
+        trancount = row[1]
+        count_list.append(trancount)
+    real_list1 = []
+    pred_list1= []
+    id_list1 = []
+    cursor.execute("select * from predictres where id>0 and uid=1 limit %s" % (count1))
+    results11 = cursor.fetchall()
+    for row in results11:
         id = row[0]
         real = row[1]
-        pred=row[2]
-        error=row[3]
-        id_list.append(id)
-        real_list.append(real)
-        pred_list.append(pred)
-        error_list.append(error)
-    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=1 group by i_p;")
-    results1 = cursor.fetchall()
-    label_list = ['<1', '1<5', '5<10', '10<15', '>15']
-    count_list=[]
-    for row in results1:
-        trancount = row[1]
-        count_list.append(trancount)
-    return render(request,'eval.html',{"data": data1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"uname":uname,"label1":label_list,"List4":count_list})
-def modeleval(request):
-    cursor = connection.cursor()
-    cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=1 group by i_p;")
-    results1 = cursor.fetchall()
-    label_list = ['<1', '1<5', '5<10', '10<15', '>15']
-    count_list=[]
-    for row in results1:
-        trancount = row[1]
-        count_list.append(trancount)
+        pred = row[2]
+        id_list1.append(id)
+        real_list1.append(real)
+        pred_list1.append(pred)
     cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=2 group by i_p;")
     results2 = cursor.fetchall()
     count_list2 = []
     for row in results2:
         trancount = row[1]
         count_list2.append(trancount)
+    real_list2 = []
+    pred_list2= []
+    cursor.execute("select * from predictres where id>0 and uid=2 limit %s" % (count1))
+    results22 = cursor.fetchall()
+    for row in results22:
+        real = row[1]
+        pred = row[2]
+        real_list2.append(real)
+        pred_list2.append(pred)
     cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=3 group by i_p;")
     results3 = cursor.fetchall()
     count_list3 = []
     for row in results3:
         trancount = row[1]
         count_list3.append(trancount)
+    real_list3 = []
+    pred_list3 = []
+    cursor.execute("select * from predictres where id>0 and uid=3 limit %s" % (count1))
+    results33 = cursor.fetchall()
+    for row in results33:
+        real = row[1]
+        pred = row[2]
+        real_list3.append(real)
+        pred_list3.append(pred)
     cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=4 group by i_p;")
     results4 = cursor.fetchall()
     count_list4 = []
     for row in results4:
         trancount = row[1]
         count_list4.append(trancount)
+    real_list4= []
+    pred_list4 = []
+    cursor.execute("select * from predictres where id>0 and uid=4 limit %s" % (count1))
+    results44 = cursor.fetchall()
+    for row in results44:
+        real = row[1]
+        pred = row[2]
+        real_list4.append(real)
+        pred_list4.append(pred)
     cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=5 group by i_p;")
     results5 = cursor.fetchall()
     count_list5 = []
     for row in results5:
         trancount = row[1]
         count_list5.append(trancount)
+    real_list5 = []
+    pred_list5 = []
+    cursor.execute("select * from predictres where id>0 and uid=5 limit %s" % (count1))
+    results55 = cursor.fetchall()
+    for row in results55:
+        real = row[1]
+        pred = row[2]
+        real_list5.append(real)
+        pred_list5.append(pred)
     cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=6 group by i_p;")
     results6 = cursor.fetchall()
     count_list6 = []
     for row in results6:
         trancount = row[1]
         count_list6.append(trancount)
+    real_list6 = []
+    pred_list6 = []
+    cursor.execute("select * from predictres where id>0 and uid=6 limit %s" % (count1))
+    results66 = cursor.fetchall()
+    for row in results66:
+        real = row[1]
+        pred = row[2]
+        real_list6.append(real)
+        pred_list6.append(pred)
     cursor.execute("select INTERVAL(error,1,5,10,15) as i_p,COUNT(id) from predictres where uid=7 group by i_p;")
     results7 = cursor.fetchall()
     count_list7 = []
     for row in results7:
         trancount = row[1]
         count_list7.append(trancount)
-    return render(request,'modeleval.html',{"label1":label_list,"List1":count_list,"List2":count_list2,"List3":count_list3,"List4":count_list4,"List5":count_list5,"List6":count_list6,"List7":count_list7})
+    real_list7 = []
+    pred_list7 = []
+    cursor.execute("select * from predictres where id>0 and uid=7 limit %s" % (count1))
+    results77 = cursor.fetchall()
+    for row in results77:
+        real = row[1]
+        pred = row[2]
+        real_list7.append(real)
+        pred_list7.append(pred)
+    return render(request,'modeleval.html',{"label1":label_list,"List1":count_list,"List2":count_list2,"List3":count_list3,"List4":count_list4,"List5":count_list5,"List6":count_list6,"List7":count_list7,"id_list1":id_list1,"real_list1":real_list1,"pred_list1":pred_list1,"real_list2":real_list2,"pred_list2":pred_list2,"real_list3":real_list3,"pred_list3":pred_list3,"real_list4":real_list4,"pred_list4":pred_list4,"real_list5":real_list5,"pred_list5":pred_list5,"real_list6":real_list6,"pred_list6":pred_list6,"real_list7":real_list7,"pred_list7":pred_list7})
 def process_data():
     # cols = ['difficulty', 'gaslimit', 'gasused', 'gaspricel1','confirmtime','timespan1']
     # cols = ['difficulty', 'gaslimit', 'rate', 'gaspricel1', 'confirmtime']
@@ -235,15 +397,37 @@ def process_data():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
     return X_train, X_test, y_train, y_test
 def process_test(test):
-    min = [[2.650680e+15, 2.100000e+04, 7.785000e+01, 8.000000e-01, 1.000000e+00, 1.000000e+00]]
-    max = [[2.797250e+15, 8.000000e+06, 1.533000e+02, 8.000000e+01, 1.305820e+05, 2.240000e+02]]
+    min = [[8.000000e-01,2.650680e+15, 2.100000e+04, 7.785000e+01,  1.000000e+00, 1.000000e+00,645, 3.0]]
+    max = [[ 8.000000e+01,2.797250e+15, 8.000000e+06, 1.533000e+02, 1.305820e+05, 2.240000e+02, 47177, 3.31]]
     max = np.array(max)
     min = np.array(min)
     test = np.array(test)
     test = (test - min) / (max - min)
-    test = np.array(test)
+    # test = np.array(test)
     return test
-
+def predict_time(test):
+    dataset = pd.read_csv('./transactioninfo3.csv', header=0, index_col=0)
+    values = dataset.values
+    values = values.astype('float32')
+    scaledData = scaler2.fit_transform(values)
+    min = [[2.65068, 21000, 76.43, 1.0]]
+    max = [[2.8008, 7607448, 155.65, 200.0]]
+    max = np.array(max)
+    min = np.array(min)
+    test = np.array(test)
+    test = (test - min) / (max - min)
+    keras.backend.clear_session()
+    model_lstm = load_model('./lstm_model_time.h5')
+    test = [test]
+    test = np.array(test)
+    # print(test)
+    pre = model_lstm.predict(test)
+    x_test = test.reshape((test.shape[0], test.shape[2]))
+    y_predict_test = pre.reshape(-1, 1)
+    inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+    inv_yhat = scaler2.inverse_transform(inv_yhat)
+    y_pred = inv_yhat[:, -1]
+    return (y_pred[0])
 
 def predict_data(test,type):
     X_train, X_test, y_train, y_test=process_data()
@@ -253,6 +437,7 @@ def predict_data(test,type):
         # y_pred = model_xgb.predict(test)
         model_xgb= xgb.Booster(model_file='./xgb.model')
         test=process_test(test)
+        test = np.array(test)
         x_test = xgb.DMatrix(test)
         pre = model_xgb.predict(x_test)
         x_test = test.reshape((test.shape[0], test.shape[1]))
@@ -261,9 +446,12 @@ def predict_data(test,type):
         inv_yhat = scaler.inverse_transform(inv_yhat)
         y_pred = inv_yhat[:, -1]
     elif type=="2":
-        model_rfr = RandomForestRegressor(n_estimators=550)
-        model_rfr.fit(X_train,y_train)
+        # model_rfr = RandomForestRegressor(n_estimators=550)
+        # model_rfr.fit(X_train,y_train)
+        with open("./model_rf.pkl", "rb") as f:
+            model_rfr = pickle.load(f)
         test = process_test(test)
+        test = np.array(test)
         pre = model_rfr.predict(test)
         x_test = test.reshape((test.shape[0], test.shape[1]))
         y_predict_test = pre.reshape(-1, 1)
@@ -272,9 +460,12 @@ def predict_data(test,type):
         y_pred = inv_yhat[:, -1]
         # y_pred=model_rfr.predict(test)
     elif type=="3":
-        model_etr = ExtraTreesRegressor(n_estimators=100)
-        model_etr.fit(X_train,y_train)
+        # model_etr = ExtraTreesRegressor(n_estimators=100)
+        # model_etr.fit(X_train,y_train)
+        with open("./model_etr.pkl", "rb") as f:
+            model_etr = pickle.load(f)
         test = process_test(test)
+        test = np.array(test)
         pre = model_etr.predict(test)
         x_test = test.reshape((test.shape[0], test.shape[1]))
         y_predict_test = pre.reshape(-1, 1)
@@ -283,9 +474,12 @@ def predict_data(test,type):
         y_pred = inv_yhat[:, -1]
         # y_pred=model_etr.predict(test)
     elif type=="4":
-        model_gbr=GradientBoostingRegressor(n_estimators=550)
-        model_gbr.fit(X_train,y_train)
+        # model_gbr=GradientBoostingRegressor(n_estimators=550)
+        # model_gbr.fit(X_train,y_train)
+        with open("./model_gbr.pkl", "rb") as f:
+            model_gbr = pickle.load(f)
         test = process_test(test)
+        test = np.array(test)
         pre = model_gbr.predict(test)
         x_test = test.reshape((test.shape[0], test.shape[1]))
         y_predict_test = pre.reshape(-1, 1)
@@ -294,9 +488,12 @@ def predict_data(test,type):
         y_pred = inv_yhat[:, -1]
         # y_pred=model_gbr.predict(test)
     elif type=="5":
-        model_liner = LinearRegression()
-        model_liner.fit(X_train,y_train)
+        with open("./model_linear.pkl", "rb") as f:
+            model_liner = pickle.load(f)
+        # model_liner = LinearRegression()
+        # model_liner.fit(X_train,y_train)
         test = process_test(test)
+        test = np.array(test)
         pre = model_liner.predict(test)
         x_test = test.reshape((test.shape[0], test.shape[1]))
         y_predict_test = pre.reshape(-1, 1)
@@ -305,19 +502,12 @@ def predict_data(test,type):
         y_pred = inv_yhat[:, -1]
         # y_pred=model_liner.predict(test)
     elif type=="6":
-        model_nn = load_model('./nn_model.h5')
-        min = [[2.650680e+15, 2.100000e+04, 7.785000e+01, 8.000000e-01, 1.000000e+00, 1.000000e+00]]
-        max = [[2.797250e+15, 8.000000e+06, 1.533000e+02, 8.000000e+01, 1.305820e+05, 2.240000e+02]]
-        max = np.array(max)
-        min = np.array(min)
-        test = np.array(test)
-        test = (test - min) / (max - min)
-        y_pred=model_nn.predict(test)
-        y_pred=y_pred.ravel()
-    elif type=="7":
-        model_bag=BaggingRegressor(tree.DecisionTreeRegressor(), n_estimators=100, max_samples=0.3)
-        model_bag.fit(X_train,y_train)
+        # model_bag=BaggingRegressor(tree.DecisionTreeRegressor(), n_estimators=100, max_samples=0.3)
+        # model_bag.fit(X_train,y_train)
+        with open("./model_bag.pkl", "rb") as f:
+            model_bag = pickle.load(f)
         test = process_test(test)
+        test = np.array(test)
         pre = model_bag.predict(test)
         x_test = test.reshape((test.shape[0], test.shape[1]))
         y_predict_test = pre.reshape(-1, 1)
@@ -325,25 +515,19 @@ def predict_data(test,type):
         inv_yhat = scaler.inverse_transform(inv_yhat)
         y_pred = inv_yhat[:, -1]
         # y_pred=model_bag.predict(test)
-    elif type=="8":
-        model_lstm = load_model('./LSTM_model.h5')
-        max_axis = [99, 7607448, 166.666671752929, 2.80080318450927, 155.650497436523]
-        max_aixs = map(float, max_axis)
-        min_axis = [0, 21000, 1, 2.65067744255065, 76.4280548095703]
-        min_aixs = map(float, min_axis)
-
-        cur = [float(10), float(test[0][1]), float(test[0][4]), float(test[0][0]/1000000000000000.0), float(test[0][2])]
-        #cur = map(float, cur)
-        cur = [(cur[i] - min_axis[i]) / (max_axis[i] - min_axis[i]) for i in range(len(cur))]
-        for i in range(len(cur)):
-            if cur[i] > 1:
-                cur[i] = 1
-            if cur[i] < 0:
-                cur[i] = 0
-        # cur=[cur]
-        data = np.array([[[cur[0], cur[1], cur[2], cur[3], cur[4]]]])
-        res = model_lstm.predict(data)
-        y_pred=np.array([res[0][0]*(max_axis[0]-min_axis[0])+min_axis[0]])
+    elif type=="7":
+        keras.backend.clear_session()
+        model_lstm = load_model('./lstm_model_price.h5')
+        test = process_test(test)
+        test = [test]
+        test = np.array(test)
+        # print(test)
+        pre = model_lstm.predict(test)
+        x_test = test.reshape((test.shape[0], test.shape[2]))
+        y_predict_test = pre.reshape(-1, 1)
+        inv_yhat = np.concatenate((x_test, y_predict_test), axis=1)
+        inv_yhat = scaler.inverse_transform(inv_yhat)
+        y_pred = inv_yhat[:, -1]
     return (y_pred[0])
 
 def pre(request):
@@ -368,6 +552,15 @@ def pre(request):
     gasused=int(block['gasUsed'],16)
     rate=round((gasused/gaslimit)*100,2)
     transaction_num=len(block['transactions'])
+    size = int(block['size'], 16)
+    url = 'https://api.etherscan.io/api?module=block&action=getblockreward&blockno=' + str(blockheight)+ '&apikey=YourApiKeyToken'
+    r = requests.get(url)
+    response_dict = r.json()
+    if not response_dict['result']['blockReward'] :
+        reward=0
+    else:
+        reward = int(response_dict['result']['blockReward']) / 10 ** 18
+        reward = round(reward, 2)
     price=gaspricel1
     if request.method == "POST":
         time=int(request.POST.get("confirmtime",None))
@@ -376,7 +569,7 @@ def pre(request):
         gasused=rate*gaslimit/100
         ethusd=getrate()
         ethusd=float(ethusd)
-        test = np.array([[difficulty, gaslimit,ethusd, gaspricel1,time,transaction_num]])
+        test = np.array([[gaspricel1,difficulty, gaslimit,ethusd, time,transaction_num,size,reward]])
         price=predict_data(test,type)
         if type!="8":
             price=abs(round(price,2))
@@ -399,7 +592,7 @@ def home(request):
     id_list, num_list, lowprice_list, aveprice_list,maxprice_list = get_tran_Data(block_list)
     return render(request, 'clara/index.html',
                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
-                   "aveprice": aveprice_list})
+                   "aveprice": aveprice_list,"maxprice":maxprice_list})
     #return render(request,"clara/index.html")
 
 def homedata(request):
@@ -410,8 +603,7 @@ def homedata(request):
     block_list = creat_block_list(blockheight, num2)
     id_list, num_list, lowprice_list, aveprice_list,maxprice_list = get_tran_Data(block_list)
     return render(request, 'provence/index.html',
-                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
-                   "aveprice": aveprice_list})
+                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,"aveprice": aveprice_list,"maxprice":maxprice_list})
 def about(request):
     return render(request,"clara/about.html")
 def forecast(request):
@@ -506,19 +698,25 @@ def gasapi(request):
     # rate = round((gasusedl1 / gaslimitl1) * 100, 2)
     ethusd = getrate()
     ethusd = float(ethusd)
+    size = int(block['size'], 16)
+    url = 'https://api.etherscan.io/api?module=block&action=getblockreward&blockno=' + str(blockheight) + '&apikey=YourApiKeyToken'
+    r = requests.get(url)
+    response_dict = r.json()
+    reward = int(response_dict['result']['blockReward']) / 10 ** 18
+    reward = round(reward, 2)
     # gasused = rate * gaslimit / 100
     if time != None and gaslimit != None:
         time = int(time)
         gaslimit = int(gaslimit)
-        test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, time,transaction_num]])
+        test = np.array([[gaspricel1,difficulty, gaslimit, ethusd, time,transaction_num,size,reward]])
         gasprice = predict_data(test,'1')
         gasprice = round(gasprice, 2)
         return JsonResponse({'gasprice': gasprice, 'confirmtime': time, 'gaslimit': gaslimit, 'message': "predict gasprice",'model':'xgboost'})
     elif price != None and gaslimit != None:
         price=int(price)
         gaslimit = int(gaslimit)
-        test = np.array([[difficulty, gaslimit, ethusd, gaspricel1, price]])
-        confirm = predict_data(test, '8')
+        test = np.array([[difficulty, gaslimit, ethusd, price]])
+        confirm = predict_time(test)
         # confirm = str(round(confirm, 2))
         confirm = round(confirm, 2)
         # confirm = price + int(gaslimit)
@@ -552,9 +750,7 @@ def homedata(request):
     blockheight = get_recent_block()
     block_list = creat_block_list(blockheight, num2)
     id_list, num_list, lowprice_list, aveprice_list,maxprice_list = get_tran_Data(block_list)
-    return render(request, 'provence/index.html',
-                  {"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,
-                   "aveprice": aveprice_list})
+    return render(request, 'provence/index.html',{"label": id_list, "height": block_list, "num": num_list, "lowprice": lowprice_list,"aveprice": aveprice_list,"maxprice":maxprice_list})
 def phome(request):
     return render(request,"provence/index.html")
 def pabout(request):
@@ -570,6 +766,5 @@ def pdataPage(request):
     date2, time2, value2 = fetch_info(50, "https://etherscan.io/chart/gasused?output=csv", "./gasused.csv")
     date3, time3, value3 = fetch_info(50, "https://etherscan.io/chart/gasprice?output=csv", "./gasprice.csv")
     date4, time4, value4 = fetch_info(50, "https://etherscan.io/chart/blocktime?output=csv", "./blocktime.csv")
-    return render(request, 'provence/data.html',
-                  {"date1": date1, "time1": time1, "value1": value1, "date2": date2, "time2": time2, "value2": value2,
+    return render(request, 'provence/data.html',{"date1": date1, "time1": time1, "value1": value1, "date2": date2, "time2": time2, "value2": value2,
                    "date3": date3, "time3": time3, "value3": value3, "date4": date4, "time4": time4, "value4": value4})
