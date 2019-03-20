@@ -20,9 +20,36 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <link href='https://fonts.googleapis.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,500,600' rel='stylesheet' type='text/css'>
     <style>
+        .market-update-block.clr-block-1 {
+    background: #68ae00;
+    margin-right: 1.1em;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -moz-transition: 0.5s all;
+  -o-transition: 0.5s all;
+}
+.market-update-block.clr-block-2 {
+    background:#FC8213;
+    margin-right: 1.1em;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -moz-transition: 0.5s all;
+  -o-transition: 0.5s all;
+}
+.market-update-block.clr-block-3 {
+    background:#337AB7;
+     margin-right: 1.1em;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -moz-transition: 0.5s all;
+  -o-transition: 0.5s all;
+}
         .market-update-block.clr-block-4 {
-    background: #fc6;
-    margin-right: 0.8em;
+    background: #8B4513;
+    margin-right: 1.1em;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     transition: 0.5s all;
     -webkit-transition: 0.5s all;
@@ -178,7 +205,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<div class="market-update-block clr-block-2">
 				 <div class="col-md-8 market-update-left">
 					<h3>{{ lowprice.0 }}</h3>
-					<h4>Low Gas Price (gWei)</h4>
+					<h4>Low Gas Price(gWei)</h4>
 				  </div>
 				  <div class="clearfix"> </div>
 				</div>
@@ -187,7 +214,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<div class="market-update-block clr-block-3">
 					<div class="col-md-8 market-update-left">
 						<h3>{{ aveprice.0 }}</h3>
-						<h4>Avg Gas Price (gWei)</h4>
+						<h4>Avg Gas Price(gWei)</h4>
 					</div>
 				  <div class="clearfix"> </div>
 				</div>
@@ -196,7 +223,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <div class="market-update-block clr-block-4">
                         <div class="col-md-8 market-update-left">
                             <h3>{{ maxprice.0 }}</h3>
-                            <h4>Max Gas Price (gWei)</h4>
+                            <h4>Max Gas Price(gWei)</h4>
                         </div>
                       <div class="clearfix"> </div>
                     </div>
@@ -284,9 +311,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						labels : {{ height }},
 						datasets : [
 							{
-								fillColor : "#FC6",
-								strokeColor : "#FC6",
-								pointColor : "#FC6",
+								fillColor : "#8B4513",
+								strokeColor : "#8B4513",
+								pointColor : "#8B4513",
 								pointStrokeColor : "#fff",
 								data : {{ maxprice }}
 							}

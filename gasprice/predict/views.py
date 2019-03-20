@@ -149,11 +149,22 @@ def process_eval(start,stop):
     y = dataset['gasprice']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
     n_train_size = X_train.shape[0]
-    train_set = pd.concat([X_train, y_train], axis=1, ignore_index=False)
-    all = pd.concat([train_set, test_set], axis=0, ignore_index=False)
-    values = all.values
-    values = values.astype('float32')
-    values = values[:, 2:]
+    X_train = np.array(X_train)
+    y_train = np.array(y_train)
+    y_train = y_train.reshape(-1, 1)
+    # train_set = pd.concat([X_train, y_train], axis=1, ignore_index=False)
+    # all = pd.concat([train_set, test_set], axis=0, ignore_index=False)
+    train_set = np.concatenate((X_train, y_train), axis=1)
+    # print(train_set.shape)
+    # print(type(train_set))
+    test_set = np.array(test_set)
+    all = np.concatenate((train_set, test_set), axis=0)
+    # values = all.values
+    # values = values.astype('float32')
+    values = all[:, 2:]
+    # values = all.values
+    # values = values.astype('float32')
+    # values = values[:, 2:]
     scaledData = scaler1.fit_transform(values)
     train = scaledData[:n_train_size, :]
     test = scaledData[n_train_size:, :]
@@ -199,6 +210,8 @@ def eval(request):
             x_test = xgb.DMatrix(X_test)
             y_predict_test = model_xgb.predict(x_test)
             # model = xgb.XGBRegressor(learning_rate=0.01, n_estimators=600, max_depth=7, min_child_weight=1)
+            # model.fit(X_train, y_train)
+            # y_predict_test = model.predict(X_test)
         elif type == "2":
             # model = RandomForestRegressor(n_estimators=550)
             # model.fit(X_train, y_train)
@@ -563,6 +576,7 @@ def pre(request):
         reward = round(reward, 2)
     price=gaspricel1
     if request.method == "POST":
+        flag=1
         time=int(request.POST.get("confirmtime",None))
         gaslimit=int(request.POST.get("gaslimit",None))
         type=request.POST.get("type",None)
@@ -582,7 +596,11 @@ def pre(request):
             std=0
             maxprice=0
             contime=0
-    return render(request,'pre.html',{"height":blockheight,"rate":rate,"confirm":contime,"price":price,"gaspricel1":gaspricel1,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1,"type":type,"transactionnum":transaction_num})
+    else:
+        flag=0
+        gaslimit=21000
+        type='1'
+    return render(request,'pre.html',{"flag":flag,"gaslimit":gaslimit,"height":blockheight,"rate":rate,"confirm":contime,"price":price,"gaspricel1":gaspricel1,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1,"type":type,"transactionnum":transaction_num})
 def home(request):
     num2 = 5
     if request.method == "POST":

@@ -146,11 +146,18 @@ def process_eval(start,stop):
     y = dataset['confirmtime']
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
     n_train_size = X_train.shape[0]
-    train_set = pd.concat([X_train, y_train], axis=1, ignore_index=False)
-    all = pd.concat([train_set, test_set], axis=0, ignore_index=False)
-    values = all.values
-    values = values.astype('float32')
-    values = values[:, 2:]
+    X_train = np.array(X_train)
+    y_train = np.array(y_train)
+    y_train = y_train.reshape(-1, 1)
+    train_set = np.concatenate((X_train, y_train), axis=1)
+    test_set = np.array(test_set)
+    all = np.concatenate((train_set, test_set), axis=0)
+    values = all[:, 2:]
+    # train_set = pd.concat([X_train, y_train], axis=1, ignore_index=False)
+    # all = pd.concat([train_set, test_set], axis=0, ignore_index=False)
+    # values = all.values
+    # values = values.astype('float32')
+    # values = values[:, 2:]
     scaledData = scaler1.fit_transform(values)
     train = scaledData[:n_train_size, :]
     test = scaledData[n_train_size:, :]
@@ -167,7 +174,7 @@ def backtest(request):
         flag=1
     else:
         count1=20
-        type="1"
+        type="7"
         start=26100000
         stop=26120000
         flag=0
@@ -381,6 +388,7 @@ def forecast(request):
     block = api.get_block_by_number(blockheight)
     difficulty=int(block['difficulty'],16)
     if request.method == "POST":
+        flag=1
         gasprice=int(request.POST.get("gasprice",None))
         gaslimit=int(request.POST.get("gaslimit",None))
         type=request.POST.get("type",None)
@@ -391,6 +399,10 @@ def forecast(request):
         time=int(time)
         if time<0 :
             time=10
-    return render(request,'clara/forecast.html',{"height":blockheight,"confirmtime":time,"type":type})
+    else:
+        flag=0
+        gaslimit=21000
+        gasprice=12
+    return render(request,'clara/forecast.html',{"height":blockheight,"confirmtime":time,"type":type,"flag":flag,"gaslimit":gaslimit,"gasprice":gasprice})
 # def forecast(request):
 #     return render(request,"clara/forecast.html")

@@ -847,6 +847,7 @@ ul.dropdown-menu.drp-mnu li {
 }
 .market-update-block.clr-block-3 {
     background:#337AB7;
+    margin-right: 0.8em;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     transition: 0.5s all;
   -webkit-transition: 0.5s all;
@@ -854,7 +855,8 @@ ul.dropdown-menu.drp-mnu li {
   -o-transition: 0.5s all;
 }
 .market-update-block.clr-block-4 {
-    background:#FC6;
+    background:#8B4513;
+    margin-right: 0.8em;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     transition: 0.5s all;
   -webkit-transition: 0.5s all;
