@@ -232,17 +232,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     	<div class="col-md-12 ">
     	   <div class="dygno">
     		     <h2>Input</h2>
-                    {% if flag == 1 %}
-               {%  if type == "1"  %}<span style="color: red;"> Selected model:Xgboost model</span> {% endif %}
-               {%  if type == "2"  %}<span style="color: red;"> Selected model:Random forest model</span> {% endif %}
-               {%  if type == "3"  %}<span style="color: red;"> Selected model:Extremely random forest model </span>{% endif %}
-               {%  if type == "4"  %}<span style="color: red;"> Selected model:Gradient boosting regression model</span>{% endif %}
-               {%  if type == "5"  %}<span style="color: red;"> Selected model:Linear regression model</span> {% endif %}
-               {%  if type == "6"  %}<span style="color: red;"> Selected model:Bagging Regressor model</span> {% endif %}
-               {%  if type == "7"  %}<span style="color: red;"> Selected model:LSTM model</span> {% endif %}
-               <span style="color: red;"> Gas Price:{{ gasprice }}gwei </span>
-               <span style="color: red;"> Gas Limit:{{ gaslimit }}</span>
-           {% endif %}
 				    <form class="com-mail" action="/forecast/" method="post">
                                         <div class="form-group">
                                             <label for="exampleInputName2">Please choose prediction model:</label>
@@ -266,6 +255,17 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                             <input type="text" class="form-control"  name="gaslimit" placeholder="Estimate gas limit" required>
                                         </div> <button type="submit" class="btn btn-default">Forecast Now</button>
                                     </form>
+                                   {% if flag == 1 %}
+               {%  if type == "1"  %}<span style="color: red;"> Selected model:Xgboost model</span> {% endif %}
+               {%  if type == "2"  %}<span style="color: red;"> Selected model:Random forest model</span> {% endif %}
+               {%  if type == "3"  %}<span style="color: red;"> Selected model:Extremely random forest model </span>{% endif %}
+               {%  if type == "4"  %}<span style="color: red;"> Selected model:Gradient boosting regression model</span>{% endif %}
+               {%  if type == "5"  %}<span style="color: red;"> Selected model:Linear regression model</span> {% endif %}
+               {%  if type == "6"  %}<span style="color: red;"> Selected model:Bagging Regressor model</span> {% endif %}
+               {%  if type == "7"  %}<span style="color: red;"> Selected model:LSTM model</span> {% endif %}
+               <span style="color: red;"> Gas Price:{{ gasprice }}gwei </span>
+               <span style="color: red;"> Gas Limit:{{ gaslimit }}</span>
+           {% endif %}
 			</div>
     	 </div>
 

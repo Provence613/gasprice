@@ -140,6 +140,7 @@ def process_eval(start,stop):
     values = dataset.values
     values = values.astype('float32')
     test_set = dataset[(dataset.date > start) & (dataset.date < stop)]
+    count=test_set.shape[0]
     # train set
     cols = ['height', 'date', 'difficulty', 'gaslimit', 'rate',  'gasprice']
     X = dataset[cols]
@@ -164,7 +165,7 @@ def process_eval(start,stop):
     # split into input and outputs
     X_train, y_train = train[:, :-1], train[:, -1]
     X_test, y_test = test[:, :-1], test[:, -1]
-    return  X_train, X_test, y_train, y_test
+    return  X_train, X_test, y_train, y_test,count
 def backtest(request):
     if request.method == "POST":
         count1=int(request.POST.get("count",None))
@@ -178,7 +179,7 @@ def backtest(request):
         start=26100000
         stop=26120000
         flag=0
-    X_train, X_test, y_train, y_test = process_eval(start,stop)
+    X_train, X_test, y_train, y_test,count3 = process_eval(start,stop)
     if type=="7":
         keras.backend.clear_session()
         model_lstm = load_model('./lstm_model_time.h5')
@@ -250,16 +251,39 @@ def backtest(request):
     real_list = part_data['real'].tolist()
     pred_list = part_data['predict'].tolist()
     error_list=part_data['error'].tolist()
-    df_1 = df_real_predict_test[df_real_predict_test.error < 10]
-    df_2 = df_real_predict_test[(df_real_predict_test.error > 10) & (df_real_predict_test.error < 20)]
-    df_3 = df_real_predict_test[(df_real_predict_test.error >20) & (df_real_predict_test.error < 30)]
-    df_4 = df_real_predict_test[(df_real_predict_test.error >30) & (df_real_predict_test.error <40)]
-    df_5 = df_real_predict_test[df_real_predict_test.error > 40]
-    count_list = [df_1.shape[0], df_2.shape[0], df_3.shape[0], df_4.shape[0], df_5.shape[0]]
+    df_1 = df_real_predict_test[df_real_predict_test.error < 1]
+    df_2 = df_real_predict_test[(df_real_predict_test.error > 1) & (df_real_predict_test.error < 5)]
+    df_3= df_real_predict_test[(df_real_predict_test.error > 5) & (df_real_predict_test.error < 10)]
+    df_4 = df_real_predict_test[(df_real_predict_test.error > 10) & (df_real_predict_test.error < 15)]
+    df_5 = df_real_predict_test[(df_real_predict_test.error > 15) & (df_real_predict_test.error < 20)]
+    df_6 = df_real_predict_test[(df_real_predict_test.error > 20) & (df_real_predict_test.error < 25)]
+    df_7 = df_real_predict_test[(df_real_predict_test.error >25) & (df_real_predict_test.error < 30)]
+    df_8= df_real_predict_test[(df_real_predict_test.error >30) & (df_real_predict_test.error <35)]
+    df_9 = df_real_predict_test[(df_real_predict_test.error > 35) & (df_real_predict_test.error < 40)]
+    df_10 = df_real_predict_test[df_real_predict_test.error > 40]
+    count_list = [df_1.shape[0], df_2.shape[0], df_3.shape[0], df_4.shape[0], df_5.shape[0],df_6.shape[0],df_7.shape[0],df_8.shape[0],df_9.shape[0],df_10.shape[0]]
     id_list=[]
     for id in range(count1):
-        id_list.append(id+1)
-    label_list = ['<10', '10<20', '20<30', '30<40', '>40']
+        id_list.append(id + 1)
+        # if count1<30:
+        #     id_list.append(id+1)
+        # elif count1<100:
+        #     if (id+1)%5==0:
+        #         id_list.append(id+1)
+        #     else:
+        #         id_list.append('')
+        # elif count1<300:
+        #     if (id+1)%15==0:
+        #         id_list.append(id+1)
+        #     else:
+        #         id_list.append('')
+        # else:
+        #     if (id+1)%300==0:
+        #         id_list.append(id+1)
+        #     else:
+        #         id_list.append('')
+
+    label_list = ['<1', '1<5', '5<10', '10<15', '15<20','20<25','25<30','30<35','35<40','>40']
     return render(request,'clara/backtest.html',{"flag":flag,"type":type,"time":start,"count":count1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"label1":label_list,"List4":count_list})
 def process_data():
     dataset = pd.read_csv('./transactioninfo3.csv', header=0, index_col=0)
@@ -396,7 +420,7 @@ def forecast(request):
         ethusd=float(ethusd)
         test = np.array([[difficulty, gaslimit,ethusd, gasprice]])
         time=predict_data(test,type)
-        time=int(time)
+        time=round(time,2)
         if time<0 :
             time=10
     else:

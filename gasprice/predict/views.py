@@ -79,6 +79,18 @@ def get_tran_Data(block_list):
         # height_list.append(blockheight)
         # print(int(block['transactions'][1]['gasPrice'],16))
     return id_list,num_list,lowprice_list,aveprice_list,maxprice_list
+def get_price_Data(block_list):
+    lowprice_list=[] #low price
+    for blockheight in block_list:
+        block = api.get_block_by_number(blockheight)
+        if len(block['transactions'])==0:
+            lowprice_list.append(0)
+        else:
+            gasprice=[]
+            for row in block['transactions']:
+                gasprice.append(round(int(row['gasPrice'],16)/1000000000,2))
+            lowprice_list.append(min(gasprice))
+    return lowprice_list
 def get_tran_info(TX_HASH):
     transaction = api.get_transaction_by_hash(tx_hash=TX_HASH)
     info=[]
@@ -143,6 +155,7 @@ def process_eval(start,stop):
     values = dataset.values
     values = values.astype('float32')
     test_set = dataset[(dataset.date > start) & (dataset.date < stop)]
+    count=test_set.shape[0]
     # train set
     cols = ['height', 'date', 'gaspricel1','difficulty', 'gaslimit', 'rate',  'confirmtime', 'transaction_count','size', 'reward']
     X = dataset[cols]
@@ -171,21 +184,21 @@ def process_eval(start,stop):
     # split into input and outputs
     X_train, y_train = train[:, :-1], train[:, -1]
     X_test, y_test = test[:, :-1], test[:, -1]
-    return  X_train, X_test, y_train, y_test
+    return  X_train, X_test, y_train, y_test,count
 def eval(request):
     if request.method == "POST":
-        count1=int(request.POST.get("count",None))
+        # count1=int(request.POST.get("count",None))
         start=int(request.POST.get("time",None))
         type=request.POST.get("type",None)
         stop=start+20000
         flag=1
     else:
-        count1=20
+        # count1=20
         type="1"
         start=26100000
         stop=26120000
         flag=0
-    X_train, X_test, y_train, y_test = process_eval(start,stop)
+    X_train, X_test, y_train, y_test,count1 = process_eval(start,stop)
     #scaler1是model evaluation
     if type=="7":
         keras.backend.clear_session()
@@ -268,7 +281,18 @@ def eval(request):
     count_list = [df_1.shape[0], df_2.shape[0], df_3.shape[0], df_4.shape[0], df_5.shape[0]]
     id_list=[]
     for id in range(count1):
-        id_list.append(id+1)
+        if count1<30:
+            id_list.append(id+1)
+        elif count1<100:
+            if (id + 1) % 5 == 0:
+                id_list.append(id + 1)
+            else:
+                id_list.append('')
+        else:
+            if (id + 1) % 10 == 0:
+                id_list.append(id + 1)
+            else:
+                id_list.append('')
     label_list = ['<1', '1<5', '5<10', '10<15', '>15']
     return render(request,'eval.html',{"flag":flag,"type":type,"time":start,"count":count1,"label":json.dumps(id_list),"List1":json.dumps(real_list),"List2":json.dumps(pred_list),"List3":json.dumps(error_list),"label1":label_list,"List4":count_list})
 def modeleval(request):
@@ -552,13 +576,13 @@ def pre(request):
     contime=20
     # price=20
     blockheight = get_recent_block()
-    block_list = creat_block_list(blockheight, 2)
-    lowprice_list, aveprice_list, maxprice_list,timestamp_list = get_pre_Data(block_list)
+    block_list = creat_block_list(blockheight, 1)
+    lowprice_list= get_price_Data(block_list)
     gaspricel1=lowprice_list[0]
     # gaspricel2=lowprice_list[1]
-    std=aveprice_list[0]
-    maxprice=maxprice_list[0]
-    timespan1=timestamp_list[0]-timestamp_list[1]
+    # std=aveprice_list[0]
+    # maxprice=maxprice_list[0]
+    # timespan1=timestamp_list[0]-timestamp_list[1]
     block = api.get_block_by_number(blockheight)
     difficulty=int(block['difficulty'],16)
     gaslimit=int(block['gasLimit'],16)
@@ -574,7 +598,7 @@ def pre(request):
     else:
         reward = int(response_dict['result']['blockReward']) / 10 ** 18
         reward = round(reward, 2)
-    price=gaspricel1
+    # price=gaspricel1
     if request.method == "POST":
         flag=1
         time=int(request.POST.get("confirmtime",None))
@@ -587,20 +611,17 @@ def pre(request):
         price=predict_data(test,type)
         if type!="8":
             price=abs(round(price,2))
-            if price> std:
-                std=price
-            if price>maxprice:
-                maxprice=price
             contime=time
-        else:
-            std=0
-            maxprice=0
-            contime=0
+        # else:
+        #     std=0
+        #     maxprice=0
+        #     contime=0
     else:
         flag=0
-        gaslimit=21000
-        type='1'
-    return render(request,'pre.html',{"flag":flag,"gaslimit":gaslimit,"height":blockheight,"rate":rate,"confirm":contime,"price":price,"gaspricel1":gaspricel1,"std":std,"maxprice":maxprice,"uname":uname,"timespan":timespan1,"type":type,"transactionnum":transaction_num})
+        gaslimit=''
+        type=''
+        price=''
+    return render(request,'pre.html',{"flag":flag,"gaslimit":gaslimit,"height":blockheight,"rate":rate,"confirm":contime,"price":price,"gaspricel1":gaspricel1,"uname":uname,"type":type,"transactionnum":transaction_num})
 def home(request):
     num2 = 5
     if request.method == "POST":
@@ -704,10 +725,10 @@ def gasapi(request):
     gaslimit = request.GET.get("gaslimit", None)
     price = request.GET.get("gasprice", None)
     blockheight = get_recent_block()
-    block_list = creat_block_list(blockheight, 2)
-    lowprice_list, aveprice_list, maxprice_list, timestamp_list = get_pre_Data(block_list)
+    block_list = creat_block_list(blockheight, 1)
+    lowprice_list= get_price_Data(block_list)
     gaspricel1 = lowprice_list[0]
-    timespan1 = timestamp_list[0] - timestamp_list[1]
+    # timespan1 = timestamp_list[0] - timestamp_list[1]
     block = api.get_block_by_number(blockheight)
     difficulty = int(block['difficulty'], 16)
     # gaslimitl1 = int(block['gasLimit'], 16)
