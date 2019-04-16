@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Transfer Example</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Shoppy Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<link href="../../static/clara/css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
+<!-- Custom Theme files -->
+<link href="../../static/clara/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<!--js-->
+<script src="../../static/clara/js/jquery-2.1.1.min.js"></script>
+<!--icons-css-->
+<link href="../../static/clara/css/font-awesome.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ethjs@0.3.4/dist/ethjs.min.js"></script>
+<!--Google Fonts-->
+<link href='https://fonts.googleapis.com/css?family=Carrois+Gothic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Work+Sans:400,500,600' rel='stylesheet' type='text/css'>
+<!--//skycons-icons-->
+</head>
+<body>
+<div class="page-container">
+   <div class="left-content">
+	   <div class="mother-grid-inner">
+            <!--header start here-->
+				<div class="header-main">
+					<div class="header-left">
+							<div class="logo-name">
+									 <a href="index.html"> <h1>GasScan</h1>
+									<!--<img id="logo" src="" alt="Logo"/>-->
+								  </a>
+							</div>
+							<!--search-box-->
+								<div class="search-box">
+									<form>
+										<input type="text" placeholder="Search..." required="">
+										<input type="submit" value="">
+									</form>
+								</div><!--//end-search-box-->
+							<div class="clearfix"> </div>
+						 </div>
+				     <div class="clearfix"> </div>
+				</div>
+<!--heder end here-->
+<!-- script-for sticky-nav -->
+		<script>
+		$(document).ready(function() {
+			 var navoffeset=$(".header-main").offset().top;
+			 $(window).scroll(function(){
+				var scrollpos=$(window).scrollTop();
+				if(scrollpos >=navoffeset){
+					$(".header-main").addClass("fixed");
+				}else{
+					$(".header-main").removeClass("fixed");
+				}
+			 });
+
+		});
+		</script>
+		<!-- /script-for sticky-nav -->
+<!--inner block start here-->
+<div class="inner-block">
+    <div class="blank">
+    	<h2>Wallet</h2>
+        <div style="width: 400px">
+        <form class="com-mail" >
+            <div class="form-group">
+        <label for="exampleInputName2">Confirm Time</label>
+        <input type="text"  class="form-control" id="confirmtime" placeholder="Confirm Time" required>
+            </div>
+            <div class="form-group">
+        <label>Transfer Value</label>
+        <input type="text" class="form-control" id="value" placeholder="Value" required>
+            </div>
+            <div class="form-group">
+        <label>To Address</label>
+        <input type="text" class="form-control" id="toaddress" placeholder="To Address" required>
+            </div>
+        </form>
+        <button id="button" style="display: none">sendToContract</button>
+        <button id="button1">transfer</button>
+        <button id="button2"style="display: none">sendToAccount</button>
+            </div>
+        <div id="text"></div>
+    </div>
+</div>
+<!--inner block end here-->
+<!--copy rights start here-->
+<div class="copyrights">
+	 <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+</div>
+<!--COPY rights end here-->
+</div>
+</div>
+<!--slider menu-->
+    <div class="sidebar-menu">
+		  	<div class="logo"> <a href="#" class="sidebar-icon"> <span class="fa fa-bars"></span> </a> <a href="#"> <span id="logo" ></span>
+			      <!--<img id="logo" src="" alt="Logo"/>-->
+			  </a> </div>
+		    <div class="menu">
+		      <ul id="menu" >
+		        <li id="menu-home" ><a href="/home"><i class="fa fa-tachometer"></i><span>Home</span></a></li>
+                <li><a href="/dataPage"><i class="fa fa-bar-chart"></i><span>Data</span></a></li>
+		        <li><a href="#"><i class="fa fa-cogs"></i><span>Estimate</span><span class="fa fa-angle-right" style="float: right"></span></a>
+		          <ul>
+		            <li><a href="/forecast">Forecast</a></li>
+		            <li><a href="/backtest">Model Evaluate</a></li>
+		          </ul>
+		        </li>
+		        <li><a href="#"><i class="fa fa-envelope"></i><span>Contact</span><span class="fa fa-angle-right" style="float: right"></span></a>
+		        	 <ul id="menu-academico-sub" >
+			            <li id="menu-academico-avaliacoes" ><a href="/contact">Contact Us</a></li>
+			            <li id="menu-academico-boletim" ><a href="/about">About Us</a></li>
+		             </ul>
+		        </li>
+		      </ul>
+		    </div>
+	 </div>
+	<div class="clearfix"> </div>
+</div>
+<!--slide bar menu end here-->
+<script>
+var toggle = true;
+
+$(".sidebar-icon").click(function() {
+  if (toggle)
+  {
+    $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
+    $("#menu span").css({"position":"absolute"});
+  }
+  else
+  {
+    $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
+    setTimeout(function() {
+      $("#menu span").css({"position":"relative"});
+    }, 400);
+  }
+                toggle = !toggle;
+            });
+</script>
+<!--scrolling js-->
+		<script src="../../static/clara/js/jquery.nicescroll.js"></script>
+		<script src="../../static/clara/js/scripts.js"></script>
+		<!--//scrolling js-->
+<script src="../../static/clara/js/bootstrap.js"> </script>
+<!-- mother grid end here-->
+
+
+</body>
+<script>
+window.addEventListener('load', function() {
+    		    if (typeof web3 !== 'undefined') {
+                                initContract(web3);
+                                initAccount(web3);
+                                        }		});
+    var address = '';
+    // 初始化MetaMask当前账户
+    function initAccount(web3) {		   
+        // 获取metamask当前登录的account		   
+        web3.eth.getAccounts(function(err, accounts) {
+            	console.log(accounts);		   
+                if (accounts!=null && accounts.length>0)
+    		        address = accounts[0].toString();
+            });		}
+    // 初始化合约对象
+    function initContract(web3) {
+        var abi = [{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getInfo","outputs":[{"name":"","type":"address"},{"name":"","type":"uint256"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_code","type":"uint256"},{"name":"_team","type":"uint256"}],"name":"buyKey","outputs":[],"payable":true,"stateMutability":"payable","type":"function"}];
+            var contract_address = '0x7439b128067d425AE2e73F72330387Ea8b7652fE'		   
+            var eth = new Eth(web3.currentProvider)		   
+            var contract = eth.contract(abi).at(contract_address);		   
+            listenForClicks(contract, web3)
+        }
+    // 添加按钮click事件
+    function listenForClicks (contract, web3) {
+        var button = document.getElementById('button');		   
+        var button1 = document.getElementById('button1');		   
+        var button2 = document.getElementById('button2');		   
+        // 调用buyKey方法(eth转入)		   
+        button.addEventListener('click', function() {
+            var etherValue = web3.toWei(1, 'ether');		       
+            var temp=contract.buyKey('1', '1', {from: address, value: etherValue}, function(error, result) {		           
+                console.log('Send In')
+                if (!error){       
+                console.log(JSON.stringify(result));
+                }		       
+                else		           
+                console.error(error);		       
+            });
+            document.getElementById("text").innerHTML=temp;	   
+        });
+        // 调用getInfo方法		   
+        button1.addEventListener('click', function() {		       
+            var to=$('#toaddress').val(); 
+                    var time=$('#confirmtime').val();
+                    var value=$('#value').val();
+                    if(to!=null&&to!=""&&time!=null&&time!=""&&value!=null&&value!="") {
+                        $.ajax({
+                            url: "/gasapi/",
+                            type: "GET",
+                            data: {
+                                "gaslimit": 210000,
+                                "confirmtime": 10
+                            },
+                            dataType: "json",
+                            success: function (result) {
+                                web3.eth.sendTransaction({
+                                    from: address,
+                                    to: to,
+                                    value: value * 1000000000 * 1000000000,
+                                    gasPrice: (result.gasprice) * 1000000000
+                                }, function (err, result) {
+                                    console.log("Deposit status: " + err + " result: " + result);
+                                })
+                            },
+                            error: function (xhr, status, p3, p4) {
+                                var err = "Error " + " " + status + " " + p3;
+                                if (xhr.responseText && xhr.responseText[0] == "{")
+                                    err = JSON.parse(xhr.responseText).message;
+                                alert(err);
+                            }
+                        });
+                    }
+                 });
+        // 调用withdraw方法(eth转出)		   
+        button2.addEventListener('click', function() {		       
+            contract.withdraw({from: address}, function(error, result) {		           
+                console.log('Send Out')
+                if (!error)		           
+                console.log(JSON.stringify(result));		       
+                else		           
+                console.error(error);		       
+            });		   
+        });
+    }
+</script>
+</html>
+
+
+
+

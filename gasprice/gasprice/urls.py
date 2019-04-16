@@ -18,6 +18,7 @@ from django.urls import path
 # 首先导入对应app的views文件
 from predict import  views
 from predict import  viewstime
+from predict import  viewswallet
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path(r'modeleval/',views.modeleval),
@@ -42,4 +43,5 @@ urlpatterns = [
     path(r'pbacktest/', views.pbacktest),
     path(r'pcontact/', views.pcontact),
     path(r'pdataPage/',views.pdataPage),
+    path(r'wallet/', viewswallet.wallet),
 ]
