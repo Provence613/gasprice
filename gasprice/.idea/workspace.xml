@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="62649ef4-5194-4ff2-b93b-2448c186fdd2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/blockinfo2l1.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blocktime.csv" beforeDir="false" afterPath="$PROJECT_DIR$/blocktime.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gaslimit.csv" beforeDir="false" afterPath="$PROJECT_DIR$/gaslimit.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gasprice.csv" beforeDir="false" afterPath="$PROJECT_DIR$/gasprice.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gasused.csv" beforeDir="false" afterPath="$PROJECT_DIR$/gasused.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gasprice/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/gasprice/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/predict/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/predict/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/predict/viewstime.py" beforeDir="false" afterPath="$PROJECT_DIR$/predict/viewstime.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/clara/backtest.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clara/backtest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/clara/forecast.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clara/forecast.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/eval.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/eval.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/pre.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/pre.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -132,9 +123,9 @@
     <session id="1850272619">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="66" />
-          <entry key="project.open.time.0" value="13" />
-          <entry key="project.open.time.1" value="9" />
+          <entry key="project.closed" value="73" />
+          <entry key="project.open.time.0" value="16" />
+          <entry key="project.open.time.1" value="12" />
           <entry key="project.open.time.10" value="3" />
           <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.2" value="13" />
@@ -145,7 +136,7 @@
           <entry key="project.open.time.7" value="5" />
           <entry key="project.open.time.8" value="4" />
           <entry key="project.open.time.9" value="10" />
-          <entry key="project.opened" value="68" />
+          <entry key="project.opened" value="74" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -155,7 +146,7 @@
           <entry key="h5" value="4" />
           <entry key="html" value="110" />
           <entry key="js" value="4" />
-          <entry key="py" value="27" />
+          <entry key="py" value="29" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -164,7 +155,7 @@
           <entry key="HTML" value="110" />
           <entry key="JavaScript" value="4" />
           <entry key="PLAIN_TEXT" value="28" />
-          <entry key="Python" value="27" />
+          <entry key="Python" value="29" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -187,26 +178,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/predict/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2426">
-              <caret line="731" column="2" lean-forward="true" selection-start-line="731" selection-start-column="2" selection-end-line="731" selection-end-column="2" />
+            <state relative-caret-position="-304">
+              <caret line="565" column="35" selection-start-line="565" selection-start-column="35" selection-end-line="565" selection-end-column="35" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
-                <marker date="1553654946089" expanded="true" signature="5648:7180" ph="..." />
-                <marker date="1553654946089" expanded="true" signature="17209:17214" ph="..." />
-                <marker date="1553654946089" expanded="true" signature="18231:19463" ph="..." />
+                <marker date="1555651730868" expanded="true" signature="5648:6811" ph="..." />
+                <marker date="1555651730868" expanded="true" signature="11600:12786" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/predict/viewswallet.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/predict/viewstime.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="89">
+            <state relative-caret-position="7448">
               <caret line="422" column="25" selection-start-line="422" selection-start-column="25" selection-end-line="422" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gasprice/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="160">
+              <caret line="29" column="38" lean-forward="true" selection-start-line="29" selection-start-column="38" selection-end-line="29" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -263,7 +267,6 @@
         <option value="$PROJECT_DIR$/templates/provence/forecast.html" />
         <option value="$PROJECT_DIR$/templates/modeleval.html" />
         <option value="$PROJECT_DIR$/templates/backtest.html" />
-        <option value="$PROJECT_DIR$/gasprice/urls.py" />
         <option value="$PROJECT_DIR$/templates/homedata.html" />
         <option value="$PROJECT_DIR$/templates/provence/data.html" />
         <option value="$PROJECT_DIR$/templates/provence/contact.html" />
@@ -276,8 +279,9 @@
         <option value="$PROJECT_DIR$/templates/clara/forecast.html" />
         <option value="$PROJECT_DIR$/templates/eval.html" />
         <option value="$PROJECT_DIR$/templates/clara/backtest.html" />
-        <option value="$PROJECT_DIR$/predict/views.py" />
         <option value="$PROJECT_DIR$/predict/viewstime.py" />
+        <option value="$PROJECT_DIR$/predict/views.py" />
+        <option value="$PROJECT_DIR$/gasprice/urls.py" />
       </list>
     </option>
   </component>
@@ -287,7 +291,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="384" />
     <option name="y" value="285" />
     <option name="width" value="1170" />
@@ -305,6 +309,11 @@
             <path>
               <item name="gasprice" type="b2602c69:ProjectViewProjectNode" />
               <item name="gasprice" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gasprice" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gasprice" type="462c0819:PsiDirectoryNode" />
+              <item name="etherscan" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="gasprice" type="b2602c69:ProjectViewProjectNode" />
@@ -356,7 +365,7 @@
     <property name="DatabaseDriversLRU" value="mysql" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="D:/gas release/test/gasprice" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -514,12 +523,12 @@
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16572352" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2497979" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3285968" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3179396" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3179396" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -567,13 +576,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/predict/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2375">
-          <caret line="128" column="16" selection-start-line="128" selection-start-column="6" selection-end-line="128" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/detailtx.html" />
     <entry file="file://$PROJECT_DIR$/static/Lee/js/search.js">
       <provider selected="true" editor-type-id="text-editor" />
@@ -656,13 +658,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="115">
           <caret line="141" column="21" lean-forward="true" selection-start-line="141" selection-start-column="4" selection-end-line="301" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gasprice/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
-          <caret line="35" column="43" selection-start-line="35" selection-start-column="43" selection-end-line="35" selection-end-column="43" />
         </state>
       </provider>
     </entry>
@@ -836,23 +831,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/predict/views.py">
+    <entry file="file://$PROJECT_DIR$/predict/viewstime.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2426">
-          <caret line="731" column="2" lean-forward="true" selection-start-line="731" selection-start-column="2" selection-end-line="731" selection-end-column="2" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-            <marker date="1553654946089" expanded="true" signature="5648:7180" ph="..." />
-            <marker date="1553654946089" expanded="true" signature="17209:17214" ph="..." />
-            <marker date="1553654946089" expanded="true" signature="18231:19463" ph="..." />
-          </folding>
+        <state relative-caret-position="7448">
+          <caret line="422" column="25" selection-start-line="422" selection-start-column="25" selection-end-line="422" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/predict/viewstime.py">
+    <entry file="file://$PROJECT_DIR$/predict/viewswallet.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gasprice/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="422" column="25" selection-start-line="422" selection-start-column="25" selection-end-line="422" selection-end-column="25" />
+        <state relative-caret-position="160">
+          <caret line="29" column="38" lean-forward="true" selection-start-line="29" selection-start-column="38" selection-end-line="29" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/predict/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-304">
+          <caret line="565" column="35" selection-start-line="565" selection-start-column="35" selection-end-line="565" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+            <marker date="1555651730868" expanded="true" signature="5648:6811" ph="..." />
+            <marker date="1555651730868" expanded="true" signature="11600:12786" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -21,7 +21,7 @@ from predict import  viewstime
 from predict import  viewswallet
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path(r'modeleval/',views.modeleval),
+    # path(r'modeleval/',views.modeleval),
     path(r'chart/',views.chart),
     path(r'gasapi/',views.gasapi),
     path(r'datal/', views.datal),
