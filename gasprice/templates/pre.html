@@ -39,12 +39,11 @@
 						 </div>
 						 <div class="header-right">
 						  <script src="../static/js/search.js"></script>
-                             							<!--search-box-->
-								<div class="search-box">
-									<form>
-										<input onkeyup="searchInfo()"type="text" placeholder="Search..." required="">
+                             <div class="search-box">
+{#									<form class="input">#}
+										<input onkeyup="searchInfo()"type="text" placeholder="Search..." required="" id="input-info">
 										<input type="submit" value="">
-									</form>
+{#									</form>#}
 								</div><!--//end-search-box-->
 							<!--notification menu end -->
 
@@ -100,6 +99,7 @@
                                             <label for="exampleInputEmail2">Gas Limit</label>
                                             <input type="text" class="form-control"  name="gaslimit" placeholder="Estimate gas limit" required>
                                         </div> <button type="submit" class="btn btn-default">Forecast Now</button>
+                        <button type="button" class="btn btn-default" onclick="window.location.href='/pwallet'"/>Try a Transaction</button>
                                     </form>
                {% if flag == 1 %}
                {%  if type == "1"  %}<span style="color: red;"> Selected model:Xgboost model</span> {% endif %}

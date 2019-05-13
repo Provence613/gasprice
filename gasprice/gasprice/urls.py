@@ -44,4 +44,5 @@ urlpatterns = [
     path(r'pcontact/', views.pcontact),
     path(r'pdataPage/',views.pdataPage),
     path(r'wallet/', viewswallet.wallet),
+    path(r'pwallet/', viewswallet.pwallet),
 ]
